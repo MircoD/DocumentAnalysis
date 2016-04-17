@@ -1,10 +1,7 @@
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-
-import javax.swing.text.BadLocationException;
-import javax.swing.text.PlainDocument;
-import javax.swing.text.rtf.RTFEditorKit;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Reads the .rtf and creates the Review objects.
@@ -14,18 +11,70 @@ public class Reader {
 
 	public static void main(String[] args) {
 
-		File file = new File("E:/Downloads/new.rtf");
-		RTFEditorKit kit= new RTFEditorKit();
-		PlainDocument doc = new PlainDocument();
+		ArrayList<Review> list = new ArrayList<Review>();
+		String prod = new String();
+		String user = new String();
+		String profil = new String();
+		String help = new String();
+		int score = 0;
+		String time = new String();
+		String summary = new String();
+		String text = new String();
 
 		try {
-			 FileInputStream fi = new FileInputStream(file);
-			    kit.read(fi, doc, 0);
+			Scanner scanner = new Scanner(new File("E:/Downloads/docAnaTextSample.rtf"));
+			while (scanner.hasNext()) {
 
-		} catch (IOException e) {
-			System.out.println("I/O error");
-		} catch (BadLocationException e){
-			System.out.println("Location error");
+				if (scanner.hasNext("product/productId:")) {
+					scanner.skip("product/productId:");
+					prod = removeLastChar(scanner.nextLine());
+					System.out.println(prod);
+				}
+				if (scanner.hasNext("review/userId:")) {
+					scanner.skip("review/userId:");
+					user = removeLastChar(scanner.nextLine());
+				}
+				if (scanner.hasNext("review/profileName:")) {
+					scanner.skip("review/profileName:");
+					profil = removeLastChar(scanner.nextLine());
+				}
+				if (scanner.hasNext("review/helpfulness:")) {
+					scanner.skip("review/helpfulness:");
+					help = removeLastChar(scanner.nextLine());
+				}
+				if (scanner.hasNext("review/score:")) {
+					scanner.skip("review/score:");
+					score = (int) Double
+							.parseDouble(removeLastChar(scanner.nextLine()));
+				}
+				if (scanner.hasNext("review/time:")) {
+					scanner.skip("review/time:");
+					time = removeLastChar(scanner.nextLine());
+				}
+				if (scanner.hasNext("review/summary:")) {
+					scanner.skip("review/summary:");
+					summary = removeLastChar(scanner.nextLine());
+				}
+				if (scanner.hasNext("review/text:")) {
+					scanner.skip("review/text:");
+					text = removeLastChar(scanner.nextLine());
+				}
+				scanner.nextLine();
+
+			}
+
+			list.add(new Review(prod, user, profil, help, score, time, summary,
+					text));
+			scanner.close();
+
+		} catch (FileNotFoundException e) {
+			System.out.println("File Not Found");
 		}
+		
 	}
+
+	private static String removeLastChar(String str) {
+		return str.substring(0, str.length() - 1);
+	}
+
 }
