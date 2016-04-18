@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Reads the .rtf and creates the Review objects. Reads the file line by line and
- * saves the data behind the meta-information in the correspondent variable.
+ * Reads the .rtf and creates the Review objects. Reads the file line by line
+ * and saves the data behind the meta-information in the correspondent variable.
  * After gathering all information of one review a new Review objects gets
  * created and added to the list.
  * 
@@ -17,6 +17,7 @@ public class Reader {
 	public static void main(String[] args) {
 
 		ArrayList<Review> listOfReviews = new ArrayList<Review>();
+		Logger log = new Logger();
 		String prod = new String();
 		String user = new String();
 		String profil = new String();
@@ -26,6 +27,7 @@ public class Reader {
 		long time = 0;
 		String summary = new String();
 		String text = new String();
+		int i = 0;
 
 		try {
 			Scanner scanner = new Scanner(new File(
@@ -62,19 +64,45 @@ public class Reader {
 				}
 				if (scanner.hasNext("review/time:")) {
 					scanner.skip("review/time:");
-					time = Long.parseLong(removeFirstChar(removeLastChar(scanner.nextLine())));
+					time = Long
+							.parseLong(removeFirstChar(removeLastChar(scanner
+									.nextLine())));
 				}
 				if (scanner.hasNext("review/summary:")) {
 					scanner.skip("review/summary:");
 					summary = removeFirstChar(removeLastChar(scanner.nextLine()));
+					summary = summary.replace("<a href=\"", "")
+							.replace("</a>", "").replace("\">", " ")
+							.replace("<br />", "")
+							.replace("<span class=\"tiny\"", "")
+							.replace("<span class=\"tiny", "")
+							.replace("</span>", "").replace("<p>", "")
+							.replace("&lt;", "").replace("/i&gt;", "")
+							.replace("SPOILER>>;", "").replace("shrug>", "")
+							.replace("sigh>>", "").replace("href=\"", "")
+							.replace("&#60", "").replace("&#34", "")
+							.replace("&quot;", "");
+
 				}
 				if (scanner.hasNext("review/text:")) {
 					scanner.skip("review/text:");
 					text = removeFirstChar(removeLastChar(scanner.nextLine()));
+					text = text.replace("<a href=\"", "")
+							.replace("</a>", "").replace("\">", " ")
+							.replace("<br />", "")
+							.replace("<span class=\"tiny\"", "")
+							.replace("<span class=\"tiny", "")
+							.replace("</span>", "").replace("<p>", "")
+							.replace("&lt;", "").replace("/i&gt;", "")
+							.replace("SPOILER>>;", "").replace("shrug>", "")
+							.replace("sigh>>", "").replace("href=\"", "")
+							.replace("&#60", "").replace("&#34", "")
+							.replace("&quot;", "");
 				}
 				scanner.nextLine();
 				listOfReviews.add(new Review(prod, user, profil, help_denom,
 						help_enum, score, time, summary, text));
+				log.log(summary + "   " + text, "test");
 
 			}
 
