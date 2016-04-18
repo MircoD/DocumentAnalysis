@@ -1,29 +1,34 @@
+package excercise1;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Reads the .rtf and creates the Review objects.
+ * Reads the .rtf and creates the Review objects. Reads the file line line and
+ * saves the data behind the meta-information in the correspondent variable.
+ * After gathering all information of one review a new Review objects gets
+ * created and added to the list.
  * 
  */
 public class Reader {
 
 	public static void main(String[] args) {
 
-		ArrayList<Review> list = new ArrayList<Review>();
+		ArrayList<Review> listOfReviews = new ArrayList<Review>();
 		String prod = new String();
 		String user = new String();
 		String profil = new String();
-		int help_denom = 0;
 		int help_enum = 0;
+		int help_denom = 0;
 		int score = 0;
 		String time = new String();
 		String summary = new String();
 		String text = new String();
 
 		try {
-			Scanner scanner = new Scanner(new File("E:/Downloads/docAnaTextSample.rtf"));
+			Scanner scanner = new Scanner(new File(
+					"E:/Downloads/docAnaTextSample.rtf"));
 			while (scanner.hasNext()) {
 
 				if (scanner.hasNext("product/productId:")) {
@@ -40,12 +45,19 @@ public class Reader {
 				}
 				if (scanner.hasNext("review/helpfulness:")) {
 					scanner.skip("review/helpfulness:");
-					String temp = removeFirstChar(removeLastChar(scanner.nextLine()));
+					String temp = removeFirstChar(removeLastChar(scanner
+							.nextLine()));
+					String[] tempSplit = temp.split("/");
+					help_enum = Integer.parseInt(tempSplit[0]);
+					help_denom = Integer.parseInt(tempSplit[1]);
+					System.out.println(help_enum + "    " + help_denom);
+
 				}
 				if (scanner.hasNext("review/score:")) {
 					scanner.skip("review/score:");
 					score = (int) Double
-							.parseDouble(removeFirstChar(removeLastChar(scanner.nextLine())));
+							.parseDouble(removeFirstChar(removeLastChar(scanner
+									.nextLine())));
 				}
 				if (scanner.hasNext("review/time:")) {
 					scanner.skip("review/time:");
@@ -63,23 +75,22 @@ public class Reader {
 
 			}
 
-			list.add(new Review(prod, user, profil, help_denom, help_enum, score, time, summary,
-					text));
+			listOfReviews.add(new Review(prod, user, profil, help_denom,
+					help_enum, score, time, summary, text));
 			scanner.close();
 
 		} catch (FileNotFoundException e) {
 			System.out.println("File Not Found");
 		}
-		
+
 	}
 
 	private static String removeLastChar(String str) {
 		return str.substring(0, str.length() - 1);
 	}
-	
+
 	private static String removeFirstChar(String str) {
 		return str.substring(1, str.length());
 	}
-
 
 }
