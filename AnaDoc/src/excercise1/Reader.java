@@ -6,12 +6,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Reads the .rtf and creates the Review objects. Reads the file line line and
+ * Reads the .rtf and creates the Review objects. Reads the file line by line and
  * saves the data behind the meta-information in the correspondent variable.
  * After gathering all information of one review a new Review objects gets
  * created and added to the list.
- * 
- * If the 
  * 
  */
 public class Reader {
@@ -25,13 +23,14 @@ public class Reader {
 		int help_enum = 0;
 		int help_denom = 0;
 		int score = 0;
-		String time = new String();
+		long time = 0;
 		String summary = new String();
 		String text = new String();
 
 		try {
-			Scanner scanner = new Scanner(new File("E:/Downloads/new.rtf"));
-			scanner.skip("(?s).{350}"); //skip all formating
+			Scanner scanner = new Scanner(new File(
+					"E:/Downloads/docAnaTextSample.rtf"));
+			scanner.skip("(?s).{350}"); // skip all formating at the beginning
 			while (scanner.hasNext()) {
 
 				if (scanner.hasNext("product/productId:")) {
@@ -53,7 +52,6 @@ public class Reader {
 					String[] tempSplit = temp.split("/");
 					help_enum = Integer.parseInt(tempSplit[0]);
 					help_denom = Integer.parseInt(tempSplit[1]);
-					System.out.println(help_enum + "    " + help_denom);
 
 				}
 				if (scanner.hasNext("review/score:")) {
@@ -64,7 +62,7 @@ public class Reader {
 				}
 				if (scanner.hasNext("review/time:")) {
 					scanner.skip("review/time:");
-					time = removeFirstChar(removeLastChar(scanner.nextLine()));
+					time = Long.parseLong(removeFirstChar(removeLastChar(scanner.nextLine())));
 				}
 				if (scanner.hasNext("review/summary:")) {
 					scanner.skip("review/summary:");

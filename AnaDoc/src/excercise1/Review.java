@@ -14,12 +14,12 @@ public class Review {
 	private int helpfulness_denom;		//helpfulness denominator
 	private int helpfulness_enum;		//helpfulness enumerator
 	private int score;
-	private String time;
+	private long time;
 	private String summary;
 	private String text;
 
 	public Review(String productId, String userId, String profileName,
-			int helpfulness_denom,int helpfulness_enum,int score, String time, String summary,
+			int helpfulness_denom,int helpfulness_enum,int score, long time, String summary,
 			String text) {
 		this.productId = productId;
 		this.userId = userId;
@@ -78,14 +78,6 @@ public class Review {
 
 	public void setScore(int score) {
 		this.score = score;
-	}
-
-	public String getTime() {
-		return time;
-	}
-
-	public void setTime(String time) {
-		this.time = time;
 	}
 
 	public String getSummary() {
