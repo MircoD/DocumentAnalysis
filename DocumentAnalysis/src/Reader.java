@@ -15,7 +15,8 @@ public class Reader {
 		String prod = new String();
 		String user = new String();
 		String profil = new String();
-		String help = new String();
+		int help_denom = 0;
+		int help_enum = 0;
 		int score = 0;
 		String time = new String();
 		String summary = new String();
@@ -28,7 +29,6 @@ public class Reader {
 				if (scanner.hasNext("product/productId:")) {
 					scanner.skip("product/productId:");
 					prod = removeLastChar(scanner.nextLine());
-					System.out.println(prod);
 				}
 				if (scanner.hasNext("review/userId:")) {
 					scanner.skip("review/userId:");
@@ -40,7 +40,8 @@ public class Reader {
 				}
 				if (scanner.hasNext("review/helpfulness:")) {
 					scanner.skip("review/helpfulness:");
-					help = removeLastChar(scanner.nextLine());
+					String temp = removeFirstChar(removeLastChar(scanner.nextLine()));
+					System.out.println(temp);
 				}
 				if (scanner.hasNext("review/score:")) {
 					scanner.skip("review/score:");
@@ -63,7 +64,7 @@ public class Reader {
 
 			}
 
-			list.add(new Review(prod, user, profil, help, score, time, summary,
+			list.add(new Review(prod, user, profil, help_denom, help_enum, score, time, summary,
 					text));
 			scanner.close();
 
@@ -76,5 +77,10 @@ public class Reader {
 	private static String removeLastChar(String str) {
 		return str.substring(0, str.length() - 1);
 	}
+	
+	private static String removeFirstChar(String str) {
+		return str.substring(1, str.length());
+	}
+
 
 }
