@@ -8,8 +8,10 @@ import java.util.Scanner;
 /**
  * Reads the .rtf and creates the Review objects. Reads the file line by line
  * and saves the data behind the meta-information in the correspondent variable.
- * After gathering all information of one review a new Review objects gets
+ * After gathering all information of one review a new Review objects is
  * created and added to the list.
+ * The summary and the review text are cleaned before getting added to the Review object.
+ * 
  * 
  */
 public class Reader {
@@ -17,7 +19,6 @@ public class Reader {
 	public static void main(String[] args) {
 
 		ArrayList<Review> listOfReviews = new ArrayList<Review>();
-		Logger log = new Logger();
 		String prod = new String();
 		String user = new String();
 		String profil = new String();
@@ -27,12 +28,12 @@ public class Reader {
 		long time = 0;
 		String summary = new String();
 		String text = new String();
-		int i = 0;
 
 		try {
 			Scanner scanner = new Scanner(new File(
 					"E:/Downloads/docAnaTextSample.rtf"));
 			scanner.skip("(?s).{350}"); // skip all formating at the beginning
+			
 			while (scanner.hasNext()) {
 
 				if (scanner.hasNext("product/productId:")) {
@@ -54,7 +55,6 @@ public class Reader {
 					String[] tempSplit = temp.split("/");
 					help_enum = Integer.parseInt(tempSplit[0]);
 					help_denom = Integer.parseInt(tempSplit[1]);
-
 				}
 				if (scanner.hasNext("review/score:")) {
 					scanner.skip("review/score:");
@@ -87,9 +87,8 @@ public class Reader {
 				if (scanner.hasNext("review/text:")) {
 					scanner.skip("review/text:");
 					text = removeFirstChar(removeLastChar(scanner.nextLine()));
-					text = text.replace("<a href=\"", "")
-							.replace("</a>", "").replace("\">", " ")
-							.replace("<br />", "")
+					text = text.replace("<a href=\"", "").replace("</a>", "")
+							.replace("\">", " ").replace("<br />", "")
 							.replace("<span class=\"tiny\"", "")
 							.replace("<span class=\"tiny", "")
 							.replace("</span>", "").replace("<p>", "")
@@ -102,8 +101,6 @@ public class Reader {
 				scanner.nextLine();
 				listOfReviews.add(new Review(prod, user, profil, help_denom,
 						help_enum, score, time, summary, text));
-				log.log(summary + "   " + text, "test");
-
 			}
 
 			scanner.close();
@@ -114,10 +111,12 @@ public class Reader {
 
 	}
 
+	//Method for removing the first whitespace
 	private static String removeLastChar(String str) {
 		return str.substring(0, str.length() - 1);
 	}
 
+	//Method for removing the \ at the of the lines
 	private static String removeFirstChar(String str) {
 		return str.substring(1, str.length());
 	}

@@ -31,6 +31,17 @@ public class Review {
 		this.summary = summary;
 		this.text = text;
 	}
+	
+
+	public long getTime() {
+		return time;
+	}
+
+
+	public void setTime(long time) {
+		this.time = time;
+	}
+
 
 	public String getProductId() {
 		return productId;
