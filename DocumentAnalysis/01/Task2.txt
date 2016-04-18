@@ -2,6 +2,6 @@ The data file contains reviews of Amazon products, grouped by product id.
 The reviews are about DvD's. 
 Every review has 7 categories, userId, profileName, helpfulness of the review, score(from 1 to 5), time of the review, summary of review and the review itself.
 There are 183389 reviews. 
-There are no reviews of HP DH Part 2, but reviews of HP DH Part 1 so the data probably was taken between their relase dates.
+There are no reviews of HP DH Part 2, but reviews of every other HP so the data probably was taken between release dates of HP DH 1 and HP DH 2.
 
 
