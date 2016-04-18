@@ -1,4 +1,5 @@
 package excercise1;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -9,6 +10,8 @@ import java.util.Scanner;
  * saves the data behind the meta-information in the correspondent variable.
  * After gathering all information of one review a new Review objects gets
  * created and added to the list.
+ * 
+ * If the 
  * 
  */
 public class Reader {
@@ -27,8 +30,8 @@ public class Reader {
 		String text = new String();
 
 		try {
-			Scanner scanner = new Scanner(new File(
-					"E:/Downloads/docAnaTextSample.rtf"));
+			Scanner scanner = new Scanner(new File("E:/Downloads/new.rtf"));
+			scanner.skip("(?s).{350}"); //skip all formating
 			while (scanner.hasNext()) {
 
 				if (scanner.hasNext("product/productId:")) {
@@ -72,11 +75,11 @@ public class Reader {
 					text = removeFirstChar(removeLastChar(scanner.nextLine()));
 				}
 				scanner.nextLine();
+				listOfReviews.add(new Review(prod, user, profil, help_denom,
+						help_enum, score, time, summary, text));
 
 			}
 
-			listOfReviews.add(new Review(prod, user, profil, help_denom,
-					help_enum, score, time, summary, text));
 			scanner.close();
 
 		} catch (FileNotFoundException e) {
