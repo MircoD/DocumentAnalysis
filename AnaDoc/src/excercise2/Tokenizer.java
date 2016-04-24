@@ -11,7 +11,7 @@ public class Tokenizer {
 	public static String[] splitSentences(String text) {
 		
 		// common abbreviations, including one character abbreviations (e.g., T.J., Mr. S.,...)
-		String abbreviations = "(etc|approx|Mr|Jr|\\s\\w|cf|ref|Attn|dept|est|Yrs)";
+		String abbreviations = "(etc|approx|Mr|Jr|(\\s\\w)|(\\w\\.\\w\\.)|cf|ref|Attn|dept|est|Yrs)";
 		// match dots not used in an abbreviation or ?s or !s followed by an uppercase letter
 		String regex = "(((?<!"+abbreviations+")(\\.+))|(\\?+)|(\\!+))(?=((\\s*)[A-Z])|\\n)";
 
