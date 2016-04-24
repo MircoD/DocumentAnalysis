@@ -1,0 +1,26 @@
+\documentclass{article}
+\usepackage[german]{babel}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\lhead{Computational Methods for Document Analysisc 02}
+\rhead{Mirco Dietrich\\ Maurice-Roman Isele}
+\pagestyle{fancy}
+\title{Computational Methods for Document Analysis 02}
+\author{Mirco Dietrich\\ Maurice-Roman Isele}
+
+\begin{document}
+\maketitle
+\section*{Exercise 2}
+
+\section*{Exercise 3}
+
+One of the obvious problems was to identify the abbreviations used by the people reviewing. We solved this by looking at the data and furthermore considering more common abbreviations used in the English language. Additionally, any name abbreviations are possible, e.g. \textit{''Mr. K.''}, \textit{''T.J.''}, and so on. \\
+
+A more complex problem was to decide whether an abbreviation is the end of the sentence or not. For example, in \textit{''[...] mental insanity, suicide, etc. However, if you don't want [...]''} the abbreviation is the end of a sentence, but in \textit{[...] acting, storyline, etc. of this were good [...]} it is not. You can't decide this by only considering punctuation and a list of all abbreviations. You could say that an uppercase letter helps you identify the beginning of the next sentence in this scenario, but you have to consider 1) you always write names in uppercase (like New York) and 2) you can't count on the user to use correct spelling and grammar. That's why we never use dots in abbreviations to split the string. \\
+
+The last problem was dealing with multiple dots/question marks/exclamation marks, and again deciding whether the sentence ended after multiple dots, which leads to the same problem. With our current knowledge in text analysis (no grammar etc.), this seems to be the best we can do.
+
+\section*{Exercise 4}
+
+\end{document}
