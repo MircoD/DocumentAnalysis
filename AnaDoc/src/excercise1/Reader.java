@@ -8,9 +8,9 @@ import java.util.Scanner;
 /**
  * Reads the .rtf and creates the Review objects. Reads the file line by line
  * and saves the data behind the meta-information in the correspondent variable.
- * After gathering all information of one review a new Review objects is
- * created and added to the list.
- * The summary and the review text are cleaned before getting added to the Review object.
+ * After gathering all information of one review a new Review objects is created
+ * and added to the list. The summary and the review text are cleaned before
+ * getting added to the Review object.
  * 
  * 
  */
@@ -28,13 +28,13 @@ public class Reader {
 		long time = 0;
 		String summary = new String();
 		String text = new String();
+		int a = 0;
 
 		try {
 			Scanner scanner = new Scanner(new File(filePath));
 			scanner.skip("(?s).{350}"); // skip all formating at the beginning
-			int i =0;
-			
-			while (i<10000) {
+
+			while (scanner.hasNextLine()) {
 
 				if (scanner.hasNext("product/productId:")) {
 					scanner.skip("product/productId:");
@@ -98,11 +98,12 @@ public class Reader {
 							.replace("&#60", "").replace("&#34", "")
 							.replace("&quot;", "");
 				}
-				
+
 				scanner.nextLine();
+
 				listOfReviews.add(new Review(prod, user, profil, help_denom,
 						help_enum, score, time, summary, text));
-				i++;
+
 			}
 
 			scanner.close();
@@ -110,18 +111,17 @@ public class Reader {
 		} catch (FileNotFoundException e) {
 			System.out.println("File Not Found");
 		}
-		
-		
+
 		return listOfReviews;
 
 	}
 
-	//Method for removing the first whitespace
+	// Method for removing the first whitespace
 	private static String removeLastChar(String str) {
 		return str.substring(0, str.length() - 1);
 	}
 
-	//Method for removing the \ at the of the lines
+	// Method for removing the \ at the of the lines
 	private static String removeFirstChar(String str) {
 		return str.substring(1, str.length());
 	}

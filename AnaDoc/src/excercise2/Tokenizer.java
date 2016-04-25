@@ -1,6 +1,5 @@
 package excercise2;
 
-import excercise1.Logger;
 
 public class Tokenizer {
 
