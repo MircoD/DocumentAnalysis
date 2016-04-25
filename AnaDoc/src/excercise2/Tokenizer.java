@@ -1,7 +1,9 @@
 package excercise2;
 
+import excercise1.Logger;
 
 public class Tokenizer {
+
 	/**
 	 * Splits a string into sentences Does not recognize whether an abbreviation
 	 * is the end of a sentence.
@@ -33,8 +35,25 @@ public class Tokenizer {
 		return result;
 	}
 
+	/**
+	 * @param String which is split into tokens
+	 * @return String [] containing the tokens
+	 * 
+	 * 
+	 * First the text is turned to lower case.
+	 * Then negation abbreviations are "cleaned" by removing the ' in the middle.
+	 * Then all non-character are turned into character to prevent token in quotes, with full stops, etc.
+	 * As a last step all multiple whitespaces are reduced to one and the text gets split at the whitespaces.
+	 * 
+	 */
 	public String[] splitTokens(String text) {
-		text = text.replaceAll("\\W", " ").replaceAll("\\s+"," ");
+		text = text.toLowerCase().replace("don't", "dont")
+				.replace("can't", "cant").replace("wouldn't", "wouldnt")
+				.replace("shouldn't", "shouldnt").replace("won't", "wont")
+				.replace("haven't", "havent").replace("hasn't", "hasnt")
+				.replace("mustn't", "mustnt").replace("doesn't", "doesnt")
+				.replace("aren't", "arent").replace("isn't", "isnt")
+				.replaceAll("\\W", " ").replaceAll("\\s+", " ");
 		return text.split("\\s");
 
 	}
