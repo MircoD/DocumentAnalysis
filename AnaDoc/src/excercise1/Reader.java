@@ -16,7 +16,7 @@ import java.util.Scanner;
  */
 public class Reader {
 
-	public static void main(String[] args) {
+	public ArrayList<Review> readAndClear(String filePath) {
 
 		ArrayList<Review> listOfReviews = new ArrayList<Review>();
 		String prod = new String();
@@ -30,11 +30,11 @@ public class Reader {
 		String text = new String();
 
 		try {
-			Scanner scanner = new Scanner(new File(
-					"E:/Downloads/docAnaTextSample.rtf"));
+			Scanner scanner = new Scanner(new File(filePath));
 			scanner.skip("(?s).{350}"); // skip all formating at the beginning
+			int i =0;
 			
-			while (scanner.hasNext()) {
+			while (i<10000) {
 
 				if (scanner.hasNext("product/productId:")) {
 					scanner.skip("product/productId:");
@@ -98,9 +98,11 @@ public class Reader {
 							.replace("&#60", "").replace("&#34", "")
 							.replace("&quot;", "");
 				}
+				
 				scanner.nextLine();
 				listOfReviews.add(new Review(prod, user, profil, help_denom,
 						help_enum, score, time, summary, text));
+				i++;
 			}
 
 			scanner.close();
@@ -108,6 +110,9 @@ public class Reader {
 		} catch (FileNotFoundException e) {
 			System.out.println("File Not Found");
 		}
+		
+		
+		return listOfReviews;
 
 	}
 
