@@ -1,5 +1,6 @@
 package excercise2;
 
+import java.util.Arrays;
 
 public class Tokenizer {
 
@@ -40,26 +41,29 @@ public class Tokenizer {
 	 * @return String [] containing the tokens
 	 * 
 	 * 
-	 *         First the text is turned to lower case. Since \W would remove all
-	 *         ' and we want to keep abbreviations(e.g. can't) we need to
-	 *         preserve them by replacing them with a really long string and
-	 *         replace that string later again with '. Then all non-character
-	 *         are replaced by whitespaces. As a last step all multiple
-	 *         whitespaces are reduced to one and the text gets split at the
-	 *         whitespaces.
+	 *         First the text is turned to lower case. Then all contractions get
+	 *         turned into the longform and the genitiv's gets removed. As a
+	 *         last step all multiple whitespaces are reduced to one and the
+	 *         text gets split at the whitespaces.
 	 * 
 	 */
 	public String[] splitTokens(String text) {
 
-		text = text
-				.toLowerCase()
-				.replace("'",
-						"reallylongsentencethatdoesntmakeanysenseanddoesntoccurinnaturallanguage")
-				.replaceAll("\\W", " ")
-				.replace(
-						"reallylongsentencethatdoesntmakeanysenseanddoesntoccurinnaturallanguage",
-						"'").replaceAll("\\s+", " ");
-		return text.split("\\s");
+		text = text.toLowerCase().replace("i'm", "i am")
+				.replace("he's", "he is").replace("she's", "she is")
+				.replace("it's", "it is").replace("'re", " are")
+				.replace("wasn't", "was not").replace("weren't", "were not")
+				.replace("don't", "do not").replace("doesn't", "does not")
+				.replace("didn't", "did not").replace("didn't", "did not")
+				.replace("hasn't", "has not").replace("hadn't", "had not")
+				.replace("haven't", "have not").replace("'ve", " have")
+				.replace("can't", "can not").replace("couldn't", "could not")
+				.replace("musn't", "must not").replace("shan't", "shall not")
+				.replace("shouldn't", "should not").replace("'ll", " will")
+				.replace("wouldn't", "would not").replace("'d", " would")
+				.replace("let's", "let us").replace("'s", "")
+				.replaceAll("\\W", " ").replaceAll("\\s+", " ");
 
+		return text.split("\\s");
 	}
 }
