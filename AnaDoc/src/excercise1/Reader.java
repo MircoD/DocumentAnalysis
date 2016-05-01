@@ -28,7 +28,6 @@ public class Reader {
 		long time = 0;
 		String summary = new String();
 		String text = new String();
-		int a = 0;
 
 		try {
 			Scanner scanner = new Scanner(new File(filePath));

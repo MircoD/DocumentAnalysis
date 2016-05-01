@@ -23,7 +23,6 @@ public class Main {
 				.readAndClear("E:/Downloads/docAnaTextSample.rtf");
 		
 		//for printing out the single words. There was an if in the Reader class to only add the correct reviews.
-		int a = 0;
 		System.out.println(listOfReviews.size());
 		for (int i = 0; i < listOfReviews.size(); i++) {
 
