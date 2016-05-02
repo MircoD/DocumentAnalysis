@@ -11,15 +11,13 @@ import edu.mit.jwi.item.IWord;
 import edu.mit.jwi.item.IWordID;
 import edu.mit.jwi.item.POS;
 
-
-
 public class Stemmer {
 
 	public void testDictionary() throws IOException {
 		// construct the URL to the Wordnet dictionary directory
 		String path = "C:/Users/Maurice/Desktop/Studium/6. Semester/CMDA/wn3.1.dict/dict";
 		URL url = new URL("file", null, path);
-		
+
 		// construct the dictionary object and open it
 		IDictionary dict = new Dictionary(url);
 		dict.open();
@@ -31,6 +29,22 @@ public class Stemmer {
 		System.out.println("Id = " + wordID);
 		System.out.println("Lemma = " + word.getLemma());
 		System.out.println("Gloss = " + word.getSynset().getGloss());
-		
-		}
+
+	}
+
+	public String[] stem(String text) {
+
+		String word = "[A-Z,a-z]+";
+		String[] regex = {  word + "s",    word + "er",      word + "es", word + "est",
+							word + "able", word + "ization", word + "y",  word + "ly",
+							word + "ing",  word + "ed",      word + "i" };
+
+		/*
+		 * Anwendung mit String.matches, z.B: "computer".matches(regex[0]) -->
+		 * FALSE "computer".matches(regex[1]) --> TRUE
+		 */
+
+		return null;
+	}
+
 }
