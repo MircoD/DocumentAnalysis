@@ -32,19 +32,28 @@ public class Stemmer {
 
 	}
 
-	public String[] stem(String text) {
+	public String[] stem(String[] tokens) {
 
-		String word = "[A-Z,a-z]+";
-		String[] regex = {  word + "s",    word + "er",      word + "es", word + "est",
-							word + "able", word + "ization", word + "y",  word + "ly",
-							word + "ing",  word + "ed",      word + "i" };
+		for (int i = 0; i < tokens.length; i++) {
 
-		/*
-		 * Anwendung mit String.matches, z.B: "computer".matches(regex[0]) -->
-		 * FALSE "computer".matches(regex[1]) --> TRUE
-		 */
+			// Suffix -s
+			if (tokens[i].matches("[A-Z,a-z]+s")) {
+				tokens[i] = tokens[i].replaceAll("s(?=\\s|$)", "");
+				i--;
+			}
 
-		return null;
+			// Suffix -er
+			if (tokens[i].matches("[A-Z,a-z]+er")) {
+				tokens[i] = tokens[i].replaceAll("er(?=\\s|$)", "e");
+				i--;
+			}
+
+			// etc., additionally add dictionary queries
+
+		}
+
+
+		return tokens;
 	}
 
 }
