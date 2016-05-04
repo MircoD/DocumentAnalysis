@@ -38,13 +38,13 @@ public class Stemmer {
 
 			// Suffix -s
 			if (tokens[i].matches("[A-Z,a-z]+s")) {
-				tokens[i] = tokens[i].replaceAll("s(?=\\s|$)", "");
+				tokens[i] = tokens[i].replaceAll("s(?=\\s+|$)", "");
 				i--;
 			}
 
 			// Suffix -er
 			if (tokens[i].matches("[A-Z,a-z]+er")) {
-				tokens[i] = tokens[i].replaceAll("er(?=\\s|$)", "e");
+				tokens[i] = tokens[i].replaceAll("er(?=\\s+|$)", "e");
 				i--;
 			}
 
