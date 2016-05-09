@@ -145,12 +145,12 @@ public class Stemmer {
 					// check whether tmpe or tmp exists as a word
 					if (existsAdverb(dict, tmpe) || existsAdjective(dict, tmpe)
 							|| existsVerb(dict, tmpe)) {
-						tokens[i] = tmp;
+						tokens[i] = tmpe;
 						change = true;
 					} else if (existsAdverb(dict, tmp)
 							|| existsAdjective(dict, tmp)
 							|| existsVerb(dict, tmp)) {
-						tokens[i] = tmpe;
+						tokens[i] = tmp;
 						change = true;
 					}
 				}
@@ -209,7 +209,7 @@ public class Stemmer {
 					String tmpe = tmp + "e";
 					// check whether tmp exists as a word
 					if (existsVerb(dict, tmpe)) {
-						tokens[i] = tmp;
+						tokens[i] = tmpe;
 						change = true;
 					} else if (existsVerb(dict, tmp)) {
 						tokens[i] = tmp;
@@ -218,7 +218,7 @@ public class Stemmer {
 				}
 
 				// Suffix -est; superlativ
-				if (tokens[i].endsWith("ed")) {
+				if (tokens[i].endsWith("est")) {
 					String tmp = tokens[i].substring(0, tokens[i].length() - 3);
 					// check if the last two chars are the same(e.g. hottest)
 					if (tmp.charAt(tmp.length() - 1) == tmp
@@ -235,8 +235,9 @@ public class Stemmer {
 
 				// some words might need to more than once, so if a stemming was
 				// used it will check the token again
-				if (change = true) {
+				if (change == true) {
 					i--;
+					change = false;
 				}
 			}
 		}
@@ -258,9 +259,7 @@ public class Stemmer {
 	}
 
 	private boolean existsVerb(IDictionary dict, String word) {
-		return (dict.getIndexWord(word, POS.VERB) != null
-				|| dict.getIndexWord(word, POS.ADJECTIVE) != null || dict
-					.getIndexWord(word, POS.ADVERB) != null);
+		return (dict.getIndexWord(word, POS.VERB) != null);
 	}
 
 	private boolean existsAdjective(IDictionary dict, String word) {
