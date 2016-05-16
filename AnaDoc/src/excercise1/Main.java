@@ -26,23 +26,18 @@ public class Main {
 		ArrayList<PosStructure> listOfPosCount = new ArrayList<PosStructure>();
 
 		listOfPosCount = tagger.importAndCountCorpus();
-		
-		
-		
-		
-		/*
-		 * listOfReviews = reader
-		 * .readAndClear("E:/Downloads/docAnaTextSample.rtf");
-		 */
+		listOfReviews = reader.readAndClear("E:/Downloads/docAnaTextSample.rtf");
+		 
+		 
+		 
 		// for printing out the single words. There was an if in the Reader
 		// class to only add the correct reviews.
-		// temporarily disabled
-		// switch i > 1 to i < listOfReviews.size();
-		System.out.println(listOfPosCount.size());
-		for (int i = 0; i < listOfPosCount.size(); i++) {
 
-			//System.out.println(listOfPosCount.get(i).toString());
+		
+		System.out.println(listOfReviews.size());
+		for (int i = 0; i < listOfReviews.size(); i++) {
 
+			
 		}
 
 	}
