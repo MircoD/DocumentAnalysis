@@ -39,9 +39,7 @@ public class Main {
 		System.out.println(listOfReviews.size());
 		for (int i = 0; i < listOfReviews.size(); i++) {
 			String[] temp = tokenizer.splitTokens(listOfReviews.get(i).getText());
-			System.out.println(tagger.AssignPosToWords(temp, map));
-
-			
+			log.log(tagger.AssignPosToWords(temp, map).toString(), "test");		
 		}
 
 	}
