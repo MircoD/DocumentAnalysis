@@ -1,9 +1,12 @@
 package excercise1;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import excercise2.Tokenizer;
 import excercise3.Stemmer;
+import excercise4.POSTagger;
+import excercise4.PosStructure;
 
 /**
  * Main class for the pipelining.
@@ -17,27 +20,31 @@ public class Main {
 		Logger log = new Logger();
 		Reader reader = new Reader();
 		Tokenizer tokenizer = new Tokenizer();
-		ArrayList<Review> listOfReviews = new ArrayList<Review>();
 		Stemmer stemm = new Stemmer();
+		POSTagger tagger = new POSTagger();
+		ArrayList<Review> listOfReviews = new ArrayList<Review>();
+		ArrayList<PosStructure> listOfPosCount = new ArrayList<PosStructure>();
 
-	
-		 listOfReviews = reader
-		.readAndClear("E:/Downloads/docAnaTextSample.rtf");
-
+		listOfPosCount = tagger.importAndCountCorpus();
+		
+		
+		
+		
+		/*
+		 * listOfReviews = reader
+		 * .readAndClear("E:/Downloads/docAnaTextSample.rtf");
+		 */
 		// for printing out the single words. There was an if in the Reader
 		// class to only add the correct reviews.
-		System.out.println(listOfReviews.size());	
-		for (int i = 0; i < listOfReviews.size(); i++) {
+		// temporarily disabled
+		// switch i > 1 to i < listOfReviews.size();
+		System.out.println(listOfPosCount.size());
+		for (int i = 0; i < listOfPosCount.size(); i++) {
 
-			String temp = listOfReviews.get(i).getText();
-			String[] temp2 = tokenizer.splitTokens(temp);
-			temp2 = stemm.stem(temp2);
-
-			for (int j = 0; j < temp2.length; j++) {
-				log.log(temp2[j], "wordle");
-			}
+			//System.out.println(listOfPosCount.get(i).toString());
 
 		}
 
 	}
+
 }
