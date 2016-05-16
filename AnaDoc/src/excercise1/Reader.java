@@ -100,10 +100,9 @@ public class Reader {
 
 				scanner.nextLine();
 
-				if(prod.compareTo("B002P8ZOUQ")==0){
 				listOfReviews.add(new Review(prod, user, profil, help_denom,
 						help_enum, score, time, summary, text));
-				}
+				
 			}
 
 			scanner.close();
