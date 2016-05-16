@@ -30,8 +30,10 @@ public class POSTagger {
 			for (File file : listOfFiles) {
 				if (file.isFile()) {
 
-					String path = "E:/Studium/Informatik/brown/" + file.getName();
-
+					String path = "E:/Studium/Informatik/brown/"
+							+ file.getName();
+					System.out.println(file.getName());
+					
 					Scanner scanner = new Scanner(new File(path));
 					while (scanner.hasNextLine()) {
 
@@ -73,10 +75,6 @@ public class POSTagger {
 																		.getCountArray()
 																		.get(l) + 1);
 												foundTag = true;
-												System.out
-														.println(listOfTaggedWords[0]
-																+ "  "
-																+ listOfTaggedWords[1]);
 											}
 
 											l++;
@@ -86,13 +84,10 @@ public class POSTagger {
 										if (foundTag == false) {
 											posStructureArray.get(k)
 													.getCountArray().add(1);
+
 											posStructureArray.get(k)
 													.getTagArray()
 													.add(listOfTaggedWords[1]);
-											System.out
-													.println(listOfTaggedWords[0]
-															+ "  "
-															+ listOfTaggedWords[1]);
 
 										}
 
@@ -106,8 +101,6 @@ public class POSTagger {
 									posStructureArray.add(new PosStructure(
 											listOfTaggedWords[0],
 											listOfTaggedWords[1], 1));
-									System.out.println(listOfTaggedWords[0]
-											+ "  " + listOfTaggedWords[1]);
 
 								}
 

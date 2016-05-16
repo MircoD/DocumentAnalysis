@@ -1,7 +1,7 @@
 package excercise1;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Map;
 
 import excercise2.Tokenizer;
 import excercise3.Stemmer;
@@ -24,8 +24,10 @@ public class Main {
 		POSTagger tagger = new POSTagger();
 		ArrayList<Review> listOfReviews = new ArrayList<Review>();
 		ArrayList<PosStructure> listOfPosCount = new ArrayList<PosStructure>();
+		Map <String, String> map;
 
 		listOfPosCount = tagger.importAndCountCorpus();
+		map = tagger.SumUpPosOfWords(listOfPosCount);
 		listOfReviews = reader.readAndClear("E:/Downloads/docAnaTextSample.rtf");
 		 
 		 
@@ -36,6 +38,8 @@ public class Main {
 		
 		System.out.println(listOfReviews.size());
 		for (int i = 0; i < listOfReviews.size(); i++) {
+			String[] temp = tokenizer.splitTokens(listOfReviews.get(i).getText());
+			System.out.println(tagger.AssignPosToWords(temp, map));
 
 			
 		}
