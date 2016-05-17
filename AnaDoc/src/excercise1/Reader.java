@@ -28,13 +28,14 @@ public class Reader {
 		long time = 0;
 		String summary = new String();
 		String text = new String();
+		int a = 0;
 
 		try {
 			Scanner scanner = new Scanner(new File(filePath));
 			scanner.skip("(?s).{350}"); // skip all formating at the beginning
 
-			while (scanner.hasNextLine()) {
-
+			while (a < 10000) {
+				a++;
 				if (scanner.hasNext("product/productId:")) {
 					scanner.skip("product/productId:");
 					prod = removeFirstChar(removeLastChar(scanner.nextLine()));
@@ -102,7 +103,7 @@ public class Reader {
 
 				listOfReviews.add(new Review(prod, user, profil, help_denom,
 						help_enum, score, time, summary, text));
-				
+
 			}
 
 			scanner.close();

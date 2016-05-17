@@ -7,7 +7,7 @@ import java.util.List;
  * -->!!README!!<--
  * 
  * Unfortunately, we were not able to integrate the Kumo-Library. Apparently,
- * you need Maven for this, and we just couldn't get it working. But we decided
+ * you need Maven for this, and we couldn't get it working. But we decided
  * to do the exercise anyway, so please see the code below.
  * 
  */

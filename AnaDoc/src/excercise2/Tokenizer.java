@@ -60,7 +60,7 @@ public class Tokenizer {
 				.replace("can't", "can not").replace("couldn't", "could not")
 				.replace("musn't", "must not").replace("shan't", "shall not")
 				.replace("shouldn't", "should not").replace("'ll", " will")
-				.replace("wouldn't", "would not").replace("'d", " would")
+				.replace("wouldn't", "would not").replace("'d", " would").replace("there's", "there is")
 				.replace("let's", "let us").replace("'s", "")
 				.replaceAll("\\W", " ").replaceAll("\\s+", " ");
 

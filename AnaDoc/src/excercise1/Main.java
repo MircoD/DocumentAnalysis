@@ -1,6 +1,7 @@
 package excercise1;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 import excercise2.Tokenizer;
@@ -26,6 +27,7 @@ public class Main {
 		ArrayList<PosStructure> listOfPosCount = new ArrayList<PosStructure>();
 		Map <String, String> map;
 
+
 		listOfPosCount = tagger.importAndCountCorpus();
 		map = tagger.SumUpPosOfWords(listOfPosCount);
 		listOfReviews = reader.readAndClear("E:/Downloads/docAnaTextSample.rtf");
@@ -39,7 +41,10 @@ public class Main {
 		System.out.println(listOfReviews.size());
 		for (int i = 0; i < listOfReviews.size(); i++) {
 			String[] temp = tokenizer.splitTokens(listOfReviews.get(i).getText());
-			log.log(tagger.AssignPosToWords(temp, map).toString(), "test");		
+			System.out.println(temp.length + "     "  + Arrays.toString(temp));
+			
+			String[] temp2 = tagger.AssignPosToWords(temp, map);
+			System.out.println(temp2.length + "     "  +  Arrays.toString(temp2));	
 		}
 
 	}

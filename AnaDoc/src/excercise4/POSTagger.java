@@ -9,18 +9,26 @@ import java.util.Scanner;
 
 public class POSTagger {
 
-	/**
+	/** 
+	 * A Method for reading in the Brown Corpus and count the appearance of each pair of word/tag.  
 	 * 
-	 * 
-	 * 
-	 * 
-	 * @return ArrayList <PosStructure> containing the word, all the tags the
+	 * @return ArrayList of PosStructures containing the word, all the tags the
 	 *         word appeared with(as a ArrayList) and a how often(as a
-	 *         ArrayList).
+	 * 
+	 *  
+	 *   How it works:
+	 *   First a file from the corpus is opened. The scanner reads the file line by line, breaking each line down to the word/tag pairs.
+	 *   Then for all word/tag pairs the list of all previous words gets (inefficiently) searched.
+	 *   If the word is not in the list, a new entry for that word is made.
+	 *   If the word already is in the list the list of tags for that word is searched.
+	 *   If that specific word/tag pair has not been seen before a new entry for that tag is made.
+	 *   Otherwise the counter for the word/tag pair gets increased by one.
+	 *         
+	 *         
 	 */
 	public ArrayList<PosStructure> importAndCountCorpus() {
 
-		ArrayList<PosStructure> posStructureArray = new ArrayList<PosStructure>();
+		ArrayList<PosStructure> listOfAllWords = new ArrayList<PosStructure>();
 
 		try {
 
@@ -29,78 +37,65 @@ public class POSTagger {
 
 			for (File file : listOfFiles) {
 				if (file.isFile()) {
-
 					String path = "E:/Studium/Informatik/brown/"
 							+ file.getName();
 					System.out.println(file.getName());
-					
 					Scanner scanner = new Scanner(new File(path));
+					
 					while (scanner.hasNextLine()) {
+						//split to to get the word/tag pairs
+						String[] splittedLineOfText = scanner.nextLine().toLowerCase().split("\\s");
 
-						String[] splittedLineOfTaggedText = scanner.nextLine()
-								.toLowerCase().split("\\s");
+						
+						for (int j = 0; j < splittedLineOfText.length; j++) {
+							//split the word/tag pair
+							//pairOfWordTag[0] = word
+							//pairOfWordTag[1] = tag
+							String[] pairOfWordTag = splittedLineOfText[j].split("/");
 
-						// splits word/tag into String[{word},{tag}] and looks
-						// if the word/tag
-						for (int j = 0; j < splittedLineOfTaggedText.length; j++) {
-
-							String[] listOfTaggedWords = splittedLineOfTaggedText[j]
-									.split("/");
-
-							if (listOfTaggedWords.length == 2) {
+							//to remove all empty ones
+							if (pairOfWordTag.length == 2) {
 								int k = 0;
 								boolean foundWord = false;
-
-								while (k < posStructureArray.size()
-										&& foundWord == false) {
-
-									if (0 == listOfTaggedWords[0]
-											.compareTo(posStructureArray.get(k).word)) {
+								
+								
+								//goes through the list of all previous words and checks if the word is already in the list.
+								while (k < listOfAllWords.size() && foundWord == false) {
+									if (0 == pairOfWordTag[0].compareTo(listOfAllWords.get(k).word)) {
+										
 										int l = 0;
 										boolean foundTag = false;
 										foundWord = true;
-										while (l < posStructureArray.get(k)
-												.getTagArray().size()) {
-
-											if (0 == listOfTaggedWords[1]
-													.compareTo(posStructureArray
-															.get(k).tagArray
-															.get(l))) {
-												posStructureArray
-														.get(k)
-														.getCountArray()
-														.set(l,
-																posStructureArray
-																		.get(k)
-																		.getCountArray()
-																		.get(l) + 1);
+										
+										
+										//the word was found in the list
+										//now the list of the tags for that word is searched
+										while (l < listOfAllWords.get(k).getTagArray().size()) {
+											if (0 == pairOfWordTag[1].compareTo(listOfAllWords.get(k).tagArray.get(l))) {
+												//increases word/tag pair counter by one
+												listOfAllWords.get(k).getCountArray().
+												set(l,listOfAllWords.get(k).getCountArray().get(l) + 1);
+												
 												foundTag = true;
 											}
-
 											l++;
-
 										}
-
 										if (foundTag == false) {
-											posStructureArray.get(k)
-													.getCountArray().add(1);
-
-											posStructureArray.get(k)
-													.getTagArray()
-													.add(listOfTaggedWords[1]);
+											listOfAllWords.get(k).getCountArray().add(1);
+											listOfAllWords.get(k).getTagArray().add(pairOfWordTag[1]);
 
 										}
 
 									}
 
-									k++;
+								k++;
 
 								}
 
 								if (foundWord == false) {
-									posStructureArray.add(new PosStructure(
-											listOfTaggedWords[0],
-											listOfTaggedWords[1], 1));
+									listOfAllWords.add(new PosStructure(
+											pairOfWordTag[0],
+											pairOfWordTag[1], 1));
 
 								}
 
@@ -117,10 +112,16 @@ public class POSTagger {
 			System.out.println("Accessing corpus failed: " + e);
 		}
 
-		return posStructureArray;
+		return listOfAllWords;
 
 	}
 
+	
+	/**
+	 * @param A array list of PosStructures.
+	 * @return A map, where the key is a a word and the value is the most used tag for that word
+	 * 
+	 */
 	public Map<String, String> SumUpPosOfWords(
 			ArrayList<PosStructure> posStructureArray) {
 
@@ -137,7 +138,6 @@ public class POSTagger {
 
 				}
 			}
-
 			POSOfWords.put(posStructureArray.get(i).word,
 					posStructureArray.get(i).tagArray.get(position));
 
@@ -147,7 +147,16 @@ public class POSTagger {
 
 	}
 
+	
+	/**
+	 * 
+	 * @param A string[] containing tokenized words, a map of words and the tags they appear with most often
+	 * @return A string[] containing the most likely pos for the word at the param string[] position
+	 * 
+	 */
 	public String[] AssignPosToWords(String[] text, Map<String, String> map) {
+
+		
 		for (int i = 0; i < text.length; i++) {
 			if (map.containsKey(text[i])) {
 				text[i] = map.get(text[i]);
