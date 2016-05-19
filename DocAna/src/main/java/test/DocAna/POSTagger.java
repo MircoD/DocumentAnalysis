@@ -33,12 +33,12 @@ public class POSTagger {
 
 		try {
 
-			File folder = new File("E:/Studium/Informatik/brown/");
+			File folder = new File("E:/Studium/Informatik/DocumentAnalysis/brown");
 			File[] listOfFiles = folder.listFiles();
 
 			for (File file : listOfFiles) {
 				if (file.isFile()) {
-					String path = "E:/Studium/Informatik/brown/"
+					String path = "E:/Studium/Informatik/DocumentAnalysis/brown/"
 							+ file.getName();
 					System.out.println(file.getName());
 					Scanner scanner = new Scanner(new File(path));
