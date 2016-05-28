@@ -1,6 +1,10 @@
 package test.DocAna;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Tokenizer {
 
@@ -14,25 +18,20 @@ public class Tokenizer {
 	 */
 	public String[] splitSentences(String text) {
 
-		// common abbreviations, including one character abbreviations (e.g.,
-		// T.J., Mr. S.,...)
-		String abbreviations = "(etc|approx|Mr|Jr|(\\s\\w)|(\\w\\.\\w\\.)|cf|ref|Attn|dept|est|Yrs)";
-		// match dots not used in an abbreviation or ?s or !s followed by an
-		// uppercase letter
-		String regex = "(((?<!" + abbreviations
-				+ ")(\\.+))|(\\?+)|(\\!+))(?=((\\s*)[A-Z])|\\n)";
+		// common abbreviations, including one character abbreviations
+		String abbreviations = "(\\s(etc|approx|Mr|Mrs|Jr|\\w|((\\w\\.){1,5}\\w)|cf|ref|"
+				+ "Attn|dept|Dept|Univ|Prof|Dr|est|Yrs|Yr|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|"
+				+ "Oct|Nov|Dec|def|prob))";
 
-		String[] sentences = text.split(regex);
-		String[] result = new String[sentences.length];
-
-		// remove unnecessary whitespaces
+		String splitRegex = "((?<!" + abbreviations + ")(\\.+)(?!(\\d+)))|(\\?+)|(\\!+)";
+		
+		String[] sentences = text.split(splitRegex);
+		
 		for (int i = 0; i < sentences.length; i++) {
-			// also remove all .,?,! for persistency since our regex already
-			// consumes some of them
-			result[i] = sentences[i].trim().replaceAll("\\.|\\?|\\!", "");
+			sentences[i] = sentences[i].trim();
 		}
 
-		return result;
+		return sentences;
 	}
 
 	/**
