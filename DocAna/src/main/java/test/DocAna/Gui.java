@@ -158,7 +158,7 @@ public class Gui {
 			
 			if (stems) {
 				String[] result2 = stemm.stem(result);
-				output("tokens.txt", result);
+				output("stems.txt", result);
 				label3.setForeground(Color.BLACK);
 				label3.setText("Output stems: Done.");
 			}
