@@ -155,22 +155,21 @@ public class Gui {
 			output("tokens.txt", result);
 			label3.setForeground(Color.BLACK);
 			label3.setText("Output tokens: Done.");
-		}
-		
-		if (pos) {
-			// todo
 			
-			label3.setForeground(Color.BLACK);
-			label3.setText("Output POS-tags: Done.");
-		}
-		
-		if (stems) {
-			// todo
+			if (stems) {
+				String[] result2 = stemm.stem(result);
+				output("tokens.txt", result);
+				label3.setForeground(Color.BLACK);
+				label3.setText("Output stems: Done.");
+			}
 			
-			label3.setForeground(Color.BLACK);
-			label3.setText("Output stems: Done.");
+			if (pos) {
+				// todo
+				
+				label3.setForeground(Color.BLACK);
+				label3.setText("Output POS-tags: Done.");
+			}
 		}
-		
 		
 		label3.setForeground(Color.BLACK);
 		label3.setText("Output successfully completed.");
