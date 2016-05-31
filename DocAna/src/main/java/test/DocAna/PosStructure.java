@@ -1,7 +1,9 @@
 package test.DocAna;
 
-
 import java.util.ArrayList;
+
+
+
 
 /**
  *
@@ -14,38 +16,61 @@ import java.util.ArrayList;
  */
 
 public class PosStructure {
-	String word;
-	ArrayList<String> tagArray = new ArrayList<String>();
-	ArrayList<Integer> countArray = new ArrayList<Integer>();
+	
+	
+	ArrayList<String> tagNminus1 = new ArrayList<String>();
+	ArrayList<String> tagNminus2 = new ArrayList<String>();;
+	ArrayList<Integer> count = new ArrayList<Integer>();;
+	Integer sum;
 
-	public PosStructure(String word, String tag, int count) {
-		this.word = word;
-		tagArray.add(tag);
-		countArray.add(count);
+	public PosStructure(String tag1,String tag2) {
+		tagNminus1.add(tag1);
+		tagNminus2.add(tag2);
+		count.add(1);
+		sum=1;
 	}
 
-	public String getWord() {
-		return word;
+
+	
+
+	/**
+	 * 
+	 * 
+	 * @param tag1
+	 * @param tag2
+	 * @return true if the tagCombination is found, false if it was not found. Adds 1 to count if it found the Combination.
+	 */
+	public boolean containsCombination(String tag1,String tag2){
+				for(int i=0;i<tagNminus1.size();i++){
+			if(tagNminus1.get(i).compareTo(tag1) == 0 && tagNminus2.get(i).compareTo(tag2) == 0){
+				this.count.set(i, this.count.get(i)+1);
+				sum++;
+				return true;
+			}
+		}
+		return false;
+		
 	}
 
-	public void setWord(String word) {
-		this.word = word;
+	
+	public void addCombination(String tag1,String tag2){
+		tagNminus1.add(tag1);
+		tagNminus2.add(tag2);
+		count.add(1);
+		sum++;
 	}
 
-	public ArrayList<String> getTagArray() {
-		return tagArray;
+
+
+
+	public Integer getSum() {
+		return sum;
 	}
 
-	public void setTagArray(ArrayList<String> tagArray) {
-		this.tagArray = tagArray;
-	}
 
-	public ArrayList<Integer> getCountArray() {
-		return countArray;
+	public void setSum(Integer sum) {
+		this.sum = sum;
 	}
-
-	public void setCountArray(ArrayList<Integer> countArray) {
-		this.countArray = countArray;
-	}
-
+	
+	
 }

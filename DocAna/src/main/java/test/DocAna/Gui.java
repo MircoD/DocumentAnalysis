@@ -10,21 +10,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
-import javax.swing.text.Style;
 
 public class Gui {
 
@@ -187,6 +180,7 @@ public class Gui {
 	            sb.append("\n");
 	            line = br.readLine();
 	        }
+	        br.close();
 	        return sb.toString();
 	    } catch (IOException e) {
 	    	return null;
