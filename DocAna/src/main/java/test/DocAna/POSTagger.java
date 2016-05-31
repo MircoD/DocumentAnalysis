@@ -2,19 +2,18 @@ package test.DocAna;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+
 
 public class POSTagger {
+	
 
 	/**
-	 * A Method for reading in the Brown Corpus and count the appearance of each
-	 * pair of word/tag.
+	 * A Method for reading in the Brown Corpus and count the appearance of each word/tag
+	 * pair and the two previous words.
 	 * 
-	 * @return ArrayList of PosStructures containing the word, all the tags the
-	 *         word appeared with(as a ArrayList) and a how often(as a
+	 * @param the String[] to which the pos should be assigned
+	 * @return String[] with the pos for a word on the position of that word from the original String[]
 	 * 
 	 * 
 	 *         How it works: First a file from the corpus is opened. The scanner
@@ -29,10 +28,11 @@ public class POSTagger {
 	 * 
 	 * 
 	 */
-	public Map<String, HashMap<String, PosStructure>>  importAndCountCorpus() {
+	public String[]  importAndCountCorpus(String[] text) {
 
 		Map<String, HashMap<String, PosStructure>> mapOfAllWords = new HashMap<String, HashMap<String, PosStructure>>();
-		ArrayList <String> test = new ArrayList<String>();
+		Map<String, Integer> frequenzyTags = new HashMap<String, Integer>();
+		frequenzyTags.put("null", 1);
 
 		try {
 
@@ -44,7 +44,6 @@ public class POSTagger {
 				if (file.isFile()) {
 					String path = "E:/Studium/Informatik/DocumentAnalysis/brown/"
 							+ file.getName();
-					System.out.println(file.getName());
 					Scanner scanner = new Scanner(new File(path));
 					
 
@@ -75,6 +74,12 @@ public class POSTagger {
 									pairOfWordTag[1] = pairOfWordTag[1].split("\\+")[0];
 								}
 									
+								if(frequenzyTags.containsKey(pairOfWordTag[1])==true){
+									frequenzyTags.replace(pairOfWordTag[1], frequenzyTags.get(pairOfWordTag[1])+1);
+								} else{
+									frequenzyTags.put(pairOfWordTag[1], 1);
+								}
+								
 								// checks if the word already appeared.
 								//if not it gets added to the map.
 								if (mapOfAllWords.containsKey(pairOfWordTag[0])) {
@@ -87,7 +92,7 @@ public class POSTagger {
 										//for the word/tag combination exists.
 										//if it exists the counter for the tag combination gets increased by one.
 										//otherwise it gets added to the list of combinations.
-										if(mapOfAllWords.get(pairOfWordTag[0]).get(pairOfWordTag[1]).containsCombination(nMinus1Tag, nMinus2Tag)){
+										if(mapOfAllWords.get(pairOfWordTag[0]).get(pairOfWordTag[1]).containsCombinationWithIncrease(nMinus1Tag, nMinus2Tag)){
 											
 											
 										} else{
@@ -122,43 +127,74 @@ public class POSTagger {
 			System.out.println("Accessing corpus failed: " + e);
 		}
 
-		System.out.println(test.toString());
-		return null;
+		text = AssignPosToWords(text, mapOfAllWords, frequenzyTags);
+		return text;
 
 	}
 
-	/**
-	 * @param A
-	 *            array list of PosStructures.
-	 * @return A map, where the key is a a word and the value is the most used
-	 *         tag for that word
-	 * 
-	 */
-
-	
-	
 
 	/**
 	 * 
-	 * @param A
-	 *            string[] containing tokenized words, a map of words and the
-	 *            tags they appear with most often
+	 * @param string[] containing tokenized words
+	 * @param a map created with importAndCountCorpus() from this class
 	 * @return A string[] containing the most likely pos for the word at the
 	 *         param string[] position
 	 * 
 	 */
-	public String[] AssignPosToWords(String[] text, Map<String, String> map) {
+	public String[] AssignPosToWords(String[] text, Map<String, HashMap<String, PosStructure>> map, Map<String,Integer> frequenzy) {
+		String[]tagged = new String[text.length];
+		String nMinus1Tag = "null";
+		String nMinus2Tag = "null";	
 
-		for (int i = 0; i < text.length; i++) {
-			if (map.containsKey(text[i])) {
-				text[i] = map.get(text[i]);
-			} else {
-				text[i] = "np";
+		
+		for(int i=0; i<text.length; i++){
+			float highestProbability =0;
+			String highestTag="np";
+			int sum=0;
+			if(map.containsKey(text[i])){
+				
+				
+				HashMap<String, PosStructure> tmpMap = map.get(text[i]);
+				Iterator itr = tmpMap.keySet().iterator();
+				
+				while(itr.hasNext()){
+					String currentTag = itr.next().toString();
+					if(tmpMap.get(currentTag).getSum()>sum){
+						highestTag = currentTag;
+						sum = tmpMap.get(currentTag).getSum();
+					}
+
+					if(tmpMap.get(currentTag).containsCombination(nMinus1Tag, nMinus2Tag)!=-1){
+						int j= tmpMap.get(currentTag).containsCombination(nMinus1Tag, nMinus2Tag);
+						float tempProb1 = (tmpMap.get(currentTag).getCount().get(j))/(frequenzy.get(nMinus1Tag)*frequenzy.get(nMinus2Tag));
+						float tempProb2 = (tmpMap.get(currentTag).getSum())/(frequenzy.get(currentTag));
+						float currentProb = (tempProb1*tempProb2);
+							
+							
+							if(currentProb>highestProbability){
+								highestTag= currentTag;
+								highestProbability = currentProb;
+							}
+					}
+				}
+				tagged[i]=highestTag;
+				
+			} else{
+				tagged[i]="np";		
 			}
 
+			nMinus2Tag = nMinus1Tag;
+			if(i==0){
+				nMinus1Tag = "null";
+			} else{
+				nMinus1Tag = tagged[i-1];
+			}
+			
+			
 		}
+		
 
-		return text;
+		return tagged;
 	}
 
 }

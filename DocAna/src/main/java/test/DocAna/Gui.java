@@ -135,6 +135,7 @@ public class Gui {
 		
 		Tokenizer tokenizer = new Tokenizer();
 		Stemmer stemm = new Stemmer();
+		POSTagger tagger = new POSTagger();
 		
 		if (sentences) {
 			String[] result = tokenizer.splitSentences(text);
@@ -149,23 +150,29 @@ public class Gui {
 			label3.setForeground(Color.BLACK);
 			label3.setText("Output tokens: Done.");
 			
-			if (stems) {
+			if (pos) {
+				String [] result3 = tagger.importAndCountCorpus(result);
+				output("tagged.txt", result3);
+				label3.setForeground(Color.BLACK);
+				label3.setText("Output POS-tags: Done.");
+
+			} 
+			if(stems){
 				String[] result2 = stemm.stem(result);
 				output("stems.txt", result2);
 				label3.setForeground(Color.BLACK);
 				label3.setText("Output stems: Done.");
 			}
 			
-			if (pos) {
-				// todo
-				
-				label3.setForeground(Color.BLACK);
-				label3.setText("Output POS-tags: Done.");
-			}
+			
+			
+		} else if(pos || stems){
+			label3.setForeground(Color.BLACK);
+			label3.setText("It didn't work. Stemming and POS-Tagging both need tokenization first.");
+			
 		}
 		
-		label3.setForeground(Color.BLACK);
-		label3.setText("Output successfully completed.");
+
 	}
 
 	

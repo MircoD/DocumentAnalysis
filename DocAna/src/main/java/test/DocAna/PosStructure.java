@@ -40,7 +40,7 @@ public class PosStructure {
 	 * @param tag2
 	 * @return true if the tagCombination is found, false if it was not found. Adds 1 to count if it found the Combination.
 	 */
-	public boolean containsCombination(String tag1,String tag2){
+	public boolean containsCombinationWithIncrease(String tag1,String tag2){
 				for(int i=0;i<tagNminus1.size();i++){
 			if(tagNminus1.get(i).compareTo(tag1) == 0 && tagNminus2.get(i).compareTo(tag2) == 0){
 				this.count.set(i, this.count.get(i)+1);
@@ -51,6 +51,33 @@ public class PosStructure {
 		return false;
 		
 	}
+	
+	public ArrayList<Integer> getCount() {
+		return count;
+	}
+
+
+
+
+	public void setCount(ArrayList<Integer> count) {
+		this.count = count;
+	}
+
+
+
+
+	/**
+	 */
+	public int containsCombination(String tag1,String tag2){
+				for(int i=0;i<tagNminus1.size();i++){
+			if(tagNminus1.get(i).compareTo(tag1) == 0 && tagNminus2.get(i).compareTo(tag2) == 0){
+				return i;
+			}
+		}
+		return -1;
+		
+	}
+	
 
 	
 	public void addCombination(String tag1,String tag2){
