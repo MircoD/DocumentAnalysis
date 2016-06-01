@@ -1,103 +1,94 @@
 package test.DocAna;
 
-import java.util.ArrayList;
-
-
-
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * This is a data structure to help organize all words and their tags. Each
  * object of this class has a String, which is a word from the brown corpus and
  * two Array Lists, with the tags the word appears with and the correspondent
- * count of the tags. This helps to look for the most frequent tag used for
- * a word.
+ * count of the tags. This helps to look for the most frequent tag used for a
+ * word.
  *
  */
 
 public class PosStructure {
-	
-	
-	ArrayList<String> tagNminus1 = new ArrayList<String>();
-	ArrayList<String> tagNminus2 = new ArrayList<String>();;
-	ArrayList<Integer> count = new ArrayList<Integer>();;
-	Integer sum;
 
-	public PosStructure(String tag1,String tag2) {
-		tagNminus1.add(tag1);
-		tagNminus2.add(tag2);
-		count.add(1);
-		sum=1;
+	Map<String, Integer> previousTagSingle;
+	Map<String, Integer> previousTagCombination;
+	int sum;
+		
+	public PosStructure(String nMinus2Tag, String nMinus1Tag) {
+		this.previousTagSingle = new HashMap<String, Integer>();
+		this.previousTagCombination = new HashMap<String, Integer>();
+		previousTagSingle.put(nMinus1Tag, 1);
+		previousTagCombination.put(nMinus2Tag +","+ nMinus1Tag, 1);
+		sum = 1;
 	}
 
-
+	/**
+	 * @param tag1
+	 * @param tag2
+	 * @return true if the tagCombination was found, false if it was not found.
+	 *         Adds 1 to the count if  combination was found.
+	 */
+	public boolean containsCombinationWithIncrease(String nMinus2Tag, String nMinus1Tag) {
+		
+			if (previousTagCombination.containsKey(nMinus2Tag +","+ nMinus1Tag)) {
+				previousTagSingle.put(nMinus1Tag, previousTagSingle.get(nMinus1Tag)+1);
+				previousTagCombination.put(nMinus2Tag +","+ nMinus1Tag,previousTagCombination.get(nMinus2Tag +","+ nMinus1Tag)+1);
+				sum++;
+				return true;
+			} else{
+				return false;
+			}
+	}
 	
 
 	/**
-	 * 
+	 * @param tag1
+	 * @param tag2
+	 * @return true if the tag combination was found, false if it was not found.
+	 */
+	public boolean containsCombination(String nMinus2Tag, String nMinus1Tag) {
+		if (previousTagCombination.containsKey(nMinus2Tag +","+ nMinus1Tag)) {	
+			return true;
+		} else{
+			return false;
+		}
+	}
+	
+	
+
+	/**
+	 * adds the combination to the map
 	 * 
 	 * @param tag1
 	 * @param tag2
-	 * @return true if the tagCombination is found, false if it was not found. Adds 1 to count if it found the Combination.
+	 * 
 	 */
-	public boolean containsCombinationWithIncrease(String tag1,String tag2){
-				for(int i=0;i<tagNminus1.size();i++){
-			if(tagNminus1.get(i).compareTo(tag1) == 0 && tagNminus2.get(i).compareTo(tag2) == 0){
-				this.count.set(i, this.count.get(i)+1);
-				sum++;
-				return true;
-			}
-		}
-		return false;
-		
-	}
-	
-	public ArrayList<Integer> getCount() {
-		return count;
-	}
-
-
-
-
-	public void setCount(ArrayList<Integer> count) {
-		this.count = count;
-	}
-
-
-
-
-	/**
-	 */
-	public int containsCombination(String tag1,String tag2){
-				for(int i=0;i<tagNminus1.size();i++){
-			if(tagNminus1.get(i).compareTo(tag1) == 0 && tagNminus2.get(i).compareTo(tag2) == 0){
-				return i;
-			}
-		}
-		return -1;
-		
-	}
-	
-
-	
-	public void addCombination(String tag1,String tag2){
-		tagNminus1.add(tag1);
-		tagNminus2.add(tag2);
-		count.add(1);
+	public void addCombination(String nMinus2Tag, String nMinus1Tag) {
+		previousTagSingle.put(nMinus1Tag, 1);
+		previousTagSingle.put(nMinus2Tag +","+ nMinus1Tag, 1);
 		sum++;
 	}
 
+	public Map<String, Integer> getTagNminus1() {
+		return previousTagSingle;
+	}
 
+	public Map<String, Integer> getTagNminus2() {
+		return previousTagCombination;
+	}
 
-
-	public Integer getSum() {
+	public int getSum() {
 		return sum;
 	}
 
-
-	public void setSum(Integer sum) {
+	public void setSum(int sum) {
 		this.sum = sum;
 	}
 	
-	
+
 }

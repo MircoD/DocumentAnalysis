@@ -151,7 +151,8 @@ public class Gui {
 			label3.setText("Output tokens: Done.");
 			
 			if (pos) {
-				String [] result3 = tagger.importAndCountCorpus(result);
+				tagger.importAndCountCorpus();
+				String [] result3 = tagger.assignPosToWords(result);
 				output("tagged.txt", result3);
 				label3.setForeground(Color.BLACK);
 				label3.setText("Output POS-tags: Done.");

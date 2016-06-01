@@ -6,8 +6,24 @@ import java.util.*;
 
 
 public class POSTagger {
+	Map<String, HashMap<String, PosStructure>> mapOfAllWords;
+	Map<String, Integer> frequenzyTags;
+	Map<String,Integer> frequenzy2Tags;
+	Map<String,Integer> frequenzy3Tags;
+	int sumAllTags;
 	
 
+	public POSTagger(){
+		this.mapOfAllWords = new HashMap<String, HashMap<String, PosStructure>>();
+		this.frequenzyTags = new HashMap<String,Integer>();
+		this.frequenzy2Tags = new HashMap<String,Integer>();
+		this.frequenzy3Tags = new HashMap<String,Integer>();
+		sumAllTags=0;
+	}
+	
+	
+	
+	
 	/**
 	 * A Method for reading in the Brown Corpus and count the appearance of each word/tag
 	 * pair and the two previous words.
@@ -28,28 +44,25 @@ public class POSTagger {
 	 * 
 	 * 
 	 */
-	public String[]  importAndCountCorpus(String[] text) {
-
-		Map<String, HashMap<String, PosStructure>> mapOfAllWords = new HashMap<String, HashMap<String, PosStructure>>();
-		Map<String, Integer> frequenzyTags = new HashMap<String, Integer>();
-		frequenzyTags.put("null", 1);
+	public void  importAndCountCorpus() {
 
 		try {
 
 			File folder = new File(
 					"E:/Studium/Informatik/DocumentAnalysis/brown");
 			File[] listOfFiles = folder.listFiles();
-
+			
 			for (File file : listOfFiles) {
 				if (file.isFile()) {
 					String path = "E:/Studium/Informatik/DocumentAnalysis/brown/"
 							+ file.getName();
+					System.out.println(file.getName());
 					Scanner scanner = new Scanner(new File(path));
 					
 
 					String nMinus1Tag = "null";
-					String nMinus2Tag = "null";	
-
+					String nMinus2Tag = "null";
+					
 					while (scanner.hasNextLine()) {
 						// split to to get the word/tag pairs
 						String[] splittedLineOfText = scanner.nextLine()
@@ -66,19 +79,11 @@ public class POSTagger {
 							
 							// to remove all empty ones
 							if (pairOfWordTag.length == 2) {
-								//remove the secondary part (-xyz) of the tag
-								if(pairOfWordTag[0].compareTo("--")==0){
-									
-								} else {
+								//remove the secondary part (-xyz/+xyz) of the tag
+								if(pairOfWordTag[0].compareTo("--")!=0){	
 									pairOfWordTag[1] = pairOfWordTag[1].split("-")[0];
 									pairOfWordTag[1] = pairOfWordTag[1].split("\\+")[0];
-								}
-									
-								if(frequenzyTags.containsKey(pairOfWordTag[1])==true){
-									frequenzyTags.replace(pairOfWordTag[1], frequenzyTags.get(pairOfWordTag[1])+1);
-								} else{
-									frequenzyTags.put(pairOfWordTag[1], 1);
-								}
+								} 
 								
 								// checks if the word already appeared.
 								//if not it gets added to the map.
@@ -112,8 +117,30 @@ public class POSTagger {
 								
 								}
 
+								if(frequenzyTags.containsKey(pairOfWordTag[1])){
+									frequenzyTags.put(pairOfWordTag[1],frequenzyTags.get(pairOfWordTag[1]) +1);	
+								} else {
+									frequenzyTags.put(pairOfWordTag[1],1);
+								}
+								
+								if(frequenzy2Tags.containsKey(nMinus1Tag+","+pairOfWordTag[1])){
+									System.out.println(frequenzy2Tags.containsKey(nMinus1Tag+","+pairOfWordTag[1]));
+									int tmp = frequenzyTags.get(nMinus1Tag+","+pairOfWordTag[1]) +1;
+									frequenzy2Tags.put(nMinus1Tag+","+pairOfWordTag[1],tmp);	
+								} else {
+									System.out.println("added   "+nMinus1Tag+","+pairOfWordTag[1]);
+									frequenzy2Tags.put(nMinus1Tag+","+pairOfWordTag[1],1);			
+								}
+								
+								if(frequenzy3Tags.containsKey(nMinus2Tag+","+nMinus1Tag+","+pairOfWordTag[1])){
+									frequenzy2Tags.put(nMinus2Tag+","+nMinus1Tag+","+pairOfWordTag[1],frequenzyTags.get(nMinus2Tag+","+nMinus1Tag+","+pairOfWordTag[1]) +1);	
+								} else {
+									frequenzy2Tags.put(nMinus2Tag+","+nMinus1Tag+","+pairOfWordTag[1],1);			
+								}
+								
 								nMinus2Tag = nMinus1Tag;
 								nMinus1Tag = pairOfWordTag[1];
+								sumAllTags++;
 							}
 
 						}
@@ -127,8 +154,6 @@ public class POSTagger {
 			System.out.println("Accessing corpus failed: " + e);
 		}
 
-		text = AssignPosToWords(text, mapOfAllWords, frequenzyTags);
-		return text;
 
 	}
 
@@ -141,43 +166,86 @@ public class POSTagger {
 	 *         param string[] position
 	 * 
 	 */
-	public String[] AssignPosToWords(String[] text, Map<String, HashMap<String, PosStructure>> map, Map<String,Integer> frequenzy) {
+	public String[] assignPosToWords(String[] text) {
 		String[]tagged = new String[text.length];
 		String nMinus1Tag = "null";
 		String nMinus2Tag = "null";	
 
 		
 		for(int i=0; i<text.length; i++){
-			float highestProbability =0;
-			String highestTag="np";
-			int sum=0;
-			if(map.containsKey(text[i])){
+			float highestProbabilityTrigram = 0;
+			String highestTagTrigram="np";
+			
+			float highestProbabilityBigram = 0;
+			String highestTagBigram="np";
+			
+			int highestProbabilityUnigram=0;
+			String highestTagUnigram="np";
+			
+			boolean foundTrigram = false;
+			boolean foundBigram = false;
+			
+			int countCurrentWord=0;
+			
+			if(mapOfAllWords.containsKey(text[i])){
 				
+				HashMap<String, PosStructure> tmpMap = mapOfAllWords.get(text[i]);
 				
-				HashMap<String, PosStructure> tmpMap = map.get(text[i]);
-				Iterator itr = tmpMap.keySet().iterator();
+				Iterator itr1 = tmpMap.keySet().iterator();
+				while(itr1.hasNext()){
+					countCurrentWord = countCurrentWord+tmpMap.get(itr1.next().toString()).getSum();
+				}
 				
-				while(itr.hasNext()){
-					String currentTag = itr.next().toString();
-					if(tmpMap.get(currentTag).getSum()>sum){
-						highestTag = currentTag;
-						sum = tmpMap.get(currentTag).getSum();
+				Iterator itr2 = tmpMap.keySet().iterator();
+				
+				while(itr2.hasNext()){
+					String currentTag = itr2.next().toString();
+					PosStructure currentPos = tmpMap.get(currentTag);
+					
+					//unigram
+					if(currentPos.getSum()>highestProbabilityUnigram){
+						highestTagUnigram = currentTag;
+						highestProbabilityUnigram = currentPos.getSum();
 					}
-
-					if(tmpMap.get(currentTag).containsCombination(nMinus1Tag, nMinus2Tag)!=-1){
-						int j= tmpMap.get(currentTag).containsCombination(nMinus1Tag, nMinus2Tag);
-						float tempProb1 = (tmpMap.get(currentTag).getCount().get(j))/(frequenzy.get(nMinus1Tag)*frequenzy.get(nMinus2Tag));
-						float tempProb2 = (tmpMap.get(currentTag).getSum())/(frequenzy.get(currentTag));
-						float currentProb = (tempProb1*tempProb2);
-							
-							
-							if(currentProb>highestProbability){
-								highestTag= currentTag;
-								highestProbability = currentProb;
-							}
+					
+					
+					//trigram
+					if(currentPos.containsCombination(nMinus1Tag, nMinus2Tag)){
+						float probTemp1 = frequenzy3Tags.get(nMinus2Tag+","+nMinus1Tag+","+currentTag)/frequenzy2Tags.get(nMinus2Tag+","+nMinus1Tag);
+						float probTemp2 = (currentPos.getSum()/countCurrentWord)/(frequenzyTags.get(currentTag)/sumAllTags);
+						float currentProb=probTemp1*probTemp2;
+						
+						if(currentProb>highestProbabilityTrigram){
+								highestTagTrigram= currentTag;
+								highestProbabilityTrigram = currentProb;
+								foundTrigram=true;
+						}
+					} else if(currentPos.getTagNminus1().containsKey(nMinus1Tag)){
+						float probTemp1 = frequenzy2Tags.get(nMinus1Tag+","+currentTag)/frequenzyTags.get(nMinus1Tag);
+						float probTemp2 = (currentPos.getSum()/countCurrentWord)/(frequenzyTags.get(currentTag)/sumAllTags);
+						float currentProb=probTemp1*probTemp2;
+					
+						if(currentProb>highestProbabilityBigram){
+							highestTagBigram =currentTag;
+							highestProbabilityBigram = currentProb;
+							foundBigram=true;
+						}
+						
+					} else if(currentPos.getSum()>highestProbabilityUnigram){
+							highestTagUnigram = currentTag;
+							highestProbabilityUnigram = currentPos.getSum();
 					}
 				}
-				tagged[i]=highestTag;
+				
+				
+				if(foundTrigram){
+					tagged[i] = highestTagTrigram;
+				} else if(foundBigram){
+					tagged[i] = highestTagBigram;
+				} else {
+					tagged[i] = highestTagUnigram;
+				}
+				
 				
 			} else{
 				tagged[i]="np";		
