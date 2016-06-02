@@ -17,7 +17,7 @@ public class PosStructure {
 
 	Map<String, Integer> previousTagSingle;
 	Map<String, Integer> previousTagCombination;
-	int sum;
+	Integer sum;
 		
 	public PosStructure(String nMinus2Tag, String nMinus1Tag) {
 		this.previousTagSingle = new HashMap<String, Integer>();
@@ -33,16 +33,10 @@ public class PosStructure {
 	 * @return true if the tagCombination was found, false if it was not found.
 	 *         Adds 1 to the count if  combination was found.
 	 */
-	public boolean containsCombinationWithIncrease(String nMinus2Tag, String nMinus1Tag) {
-		
-			if (previousTagCombination.containsKey(nMinus2Tag +","+ nMinus1Tag)) {
+	public void increase(String nMinus2Tag, String nMinus1Tag) {		
 				previousTagSingle.put(nMinus1Tag, previousTagSingle.get(nMinus1Tag)+1);
-				previousTagCombination.put(nMinus2Tag +","+ nMinus1Tag,previousTagCombination.get(nMinus2Tag +","+ nMinus1Tag)+1);
-				sum++;
-				return true;
-			} else{
-				return false;
-			}
+				previousTagCombination.put(nMinus2Tag+","+nMinus1Tag,previousTagCombination.get(nMinus2Tag+","+nMinus1Tag)+1);
+				sum++;		
 	}
 	
 
@@ -52,7 +46,7 @@ public class PosStructure {
 	 * @return true if the tag combination was found, false if it was not found.
 	 */
 	public boolean containsCombination(String nMinus2Tag, String nMinus1Tag) {
-		if (previousTagCombination.containsKey(nMinus2Tag +","+ nMinus1Tag)) {	
+		if (previousTagCombination.containsKey(nMinus2Tag+","+nMinus1Tag)) {	
 			return true;
 		} else{
 			return false;
@@ -70,7 +64,7 @@ public class PosStructure {
 	 */
 	public void addCombination(String nMinus2Tag, String nMinus1Tag) {
 		previousTagSingle.put(nMinus1Tag, 1);
-		previousTagSingle.put(nMinus2Tag +","+ nMinus1Tag, 1);
+		previousTagCombination.put(nMinus2Tag+","+nMinus1Tag, 1);
 		sum++;
 	}
 

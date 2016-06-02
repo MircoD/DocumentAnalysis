@@ -1,4 +1,5 @@
 package test.DocAna;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -7,7 +8,9 @@ import edu.mit.jwi.IDictionary;
 import edu.mit.jwi.item.POS;
 
 /**
- * 
+ * todo:
+ * add -ion
+ * add -n past tense verbs(known)
  * 
  * 
  */
@@ -27,7 +30,7 @@ public class Stemmer {
 	 *            lower case and cleaned of any non-character symbols
 	 * @return String [] with corresponding stemmed tokens
 	 */
-	public String[] stem(String[] tokens) {
+	public String[] stem(String[] tokens, String[] pos) {
 
 		IDictionary dict = null;
 
@@ -62,7 +65,12 @@ public class Stemmer {
 			} else if (tokens[i].length() > 2) {
 
 				// Suffix -s; plural, third person
-				if (tokens[i].endsWith("s")) {
+				if (tokens[i].endsWith("s")
+						&& (pos[i].compareTo("nps") == 0
+								|| pos[i].compareTo("nns") == 0 
+								|| pos[i].compareTo("nps$") == 0 
+								|| pos[i].compareTo("ppls") == 0 
+								|| pos[i].compareTo("vbz") == 0)) {
 					String tmp = tokens[i].substring(0, tokens[i].length() - 1);
 					String tmpie = tmp;
 
@@ -75,11 +83,11 @@ public class Stemmer {
 					// check whether tmp or tmpie exists as a word
 					if (existsNoun(dict, tmp) || existsVerb(dict, tmp)) {
 						tokens[i] = tmp;
-						 
+
 					} else if (existsNoun(dict, tmpie)
 							|| existsVerb(dict, tmpie)) {
 						tokens[i] = tmpie;
-						 
+
 					}
 				}
 
@@ -95,7 +103,7 @@ public class Stemmer {
 					// check whether tmp exists as a word
 					if (existsAdjective(dict, tmp) || existsAdverb(dict, tmp)) {
 						tokens[i] = tmp;
-						 
+
 					}
 				}
 
@@ -108,11 +116,15 @@ public class Stemmer {
 						tokens[i] = "man";
 					}
 				}
-				
-				
 
 				// Suffix -er ; comparative, noun from verb(e.g. keeper-> keep)
-				if (tokens[i].matches("[A-Za-z\\-]+er")) {
+				if (tokens[i].matches("[A-Za-z\\-]+er")
+						&& (pos[i].compareTo("jjr") == 0
+						|| pos[i].compareTo("rbr") == 0
+						|| pos[i].compareTo("nn") == 0 
+						|| pos[i].compareTo("nn$") == 0 
+						|| pos[i].compareTo("np") == 0
+						|| pos[i].compareTo("np$") == 0)) {
 					String tmp = tokens[i].replaceAll("er(?=\\s+|$)", "");
 					// in case of ending -e(e.g. computer->compute)
 					String tmpe = tmp + "e";
@@ -131,17 +143,17 @@ public class Stemmer {
 					if (existsAdverb(dict, tmpe) || existsAdjective(dict, tmpe)
 							|| existsVerb(dict, tmpe)) {
 						tokens[i] = tmpe;
-						 
+
 					} else if (existsAdverb(dict, tmp)
 							|| existsAdjective(dict, tmp)
 							|| existsVerb(dict, tmp)) {
 						tokens[i] = tmp;
-						 
+
 					}
 				}
 
 				// Suffix -y; adverb from adjective/noun
-				if (tokens[i].matches("[A-Za-z\\-]+y")) {
+				if (tokens[i].matches("[A-Za-z\\-]+y") && pos[i].compareTo("rb") == 0) {
 					String tmp = tokens[i].replaceAll("y(?=\\s+|$)", "");
 
 					// check if the last two chars are the same(e.g. foggy)
@@ -153,12 +165,12 @@ public class Stemmer {
 					// check whether tmp exists as a word
 					if (existsAdjective(dict, tmp) || existsNoun(dict, tmp)) {
 						tokens[i] = tmp;
-						 
+
 					}
 				}
 
 				// Suffix -ly; adverb from adjective, adverb from noun
-				if (tokens[i].matches("[A-Za-z\\-]+ly")) {
+				if (tokens[i].matches("[A-Za-z\\-]+ly") && pos[i].compareTo("rb") == 0) {
 					String tmp = tokens[i].replaceAll("ly(?=\\s+|$)", "");
 
 					// cases like happily -> happy
@@ -169,29 +181,33 @@ public class Stemmer {
 					// check whether tmp exists as a word
 					if (existsAdjective(dict, tmp) || existsNoun(dict, tmp)) {
 						tokens[i] = tmp;
-						 
+
 					}
 
 				}
 
 				// Suffix -ed; past tense, adjective from noun
-				if (tokens[i].endsWith("ed")) {
+				if (tokens[i].endsWith("ed") 
+						&& (pos[i].compareTo("vbd") == 0 
+						|| pos[i].compareTo("vbn") == 0 
+						|| pos[i].compareTo("jj") == 0)) {
 					String tmp = tokens[i].substring(0, tokens[i].length() - 2);
-					
+
 					if (tmp.matches("[A-Za-z\\-]+i")) {
 						tmp = tmp.replaceAll("i(?=\\s+|$)", "y");
 					}
 
-
 					// check whether tmp exists as a word
 					if (existsNoun(dict, tmp) || existsVerb(dict, tmp)) {
 						tokens[i] = tmp;
-						 
+
+					} else if(existsNoun(dict, tmp+"e") || existsVerb(dict, tmp+"e")){
+						tokens[i] = tmp+"e";
 					}
 				}
 
 				// Suffix -en; past tense, verb from adjective
-				if (tokens[i].endsWith("en") & tokens[i].length() > 3) {
+				if (tokens[i].endsWith("en") && tokens[i].length() > 3) {
 					String tmp = tokens[i].substring(0, tokens[i].length() - 2);
 					String tmpe = tmp + "e";
 
@@ -204,16 +220,18 @@ public class Stemmer {
 					// check whether tmp or tmpe exists as a word
 					if (existsAdjective(dict, tmp) || existsVerb(dict, tmp)) {
 						tokens[i] = tmp;
-						 
+
 					} else if (existsAdjective(dict, tmpe)
 							|| existsVerb(dict, tmpe)) {
 						tokens[i] = tmpe;
-						 
+
 					}
 				}
 
 				// Suffix -ing; gerund, present particle
-				if (tokens[i].endsWith("ing") & tokens[i].length() > 4) {
+				if (tokens[i].endsWith("ing") 
+						&& tokens[i].length() > 4 
+						&& pos[i].compareTo("vbg") == 0) {
 					String tmp = tokens[i].substring(0, tokens[i].length() - 3);
 
 					// check if the last two chars are the same(e.g. running)
@@ -228,15 +246,18 @@ public class Stemmer {
 					// check whether tmp exists as a word
 					if (existsVerb(dict, tmp)) {
 						tokens[i] = tmp;
-						 
+
 					} else if (existsVerb(dict, tmpe)) {
 						tokens[i] = tmpe;
-						 
+
 					}
 				}
 
 				// Suffix -est; superlativ
-				if (tokens[i].endsWith("est") & tokens[i].length() > 4) {
+				if (tokens[i].endsWith("est")
+						&& tokens[i].length() > 4 
+						&& (pos[i].compareTo("rbt") == 0 
+						||pos[i].compareTo("jjt") == 0)) {
 					String tmp = tokens[i].substring(0, tokens[i].length() - 3);
 
 					// check if the last two chars are the same(e.g. hottest)
@@ -248,11 +269,10 @@ public class Stemmer {
 					// check whether tmp exists as a word
 					if (existsAdjective(dict, tmp) || existsAdverb(dict, tmp)) {
 						tokens[i] = tmp;
-						 
+
 					}
 				}
 
-			
 			}
 		}
 		return tokens;

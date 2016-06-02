@@ -150,19 +150,20 @@ public class Gui {
 			label3.setForeground(Color.BLACK);
 			label3.setText("Output tokens: Done.");
 			
-			if (pos) {
+			if (pos&&stems) {
 				tagger.importAndCountCorpus();
 				String [] result3 = tagger.assignPosToWords(result);
 				output("tagged.txt", result3);
 				label3.setForeground(Color.BLACK);
 				label3.setText("Output POS-tags: Done.");
-
-			} 
-			if(stems){
-				String[] result2 = stemm.stem(result);
+				String[] result2 = stemm.stem(result, result3);
 				output("stems.txt", result2);
 				label3.setForeground(Color.BLACK);
 				label3.setText("Output stems: Done.");
+			} else if(!stems){
+				label3.setForeground(Color.BLACK);
+				label3.setText("It didn't work. Stemming needs POS first.");
+				
 			}
 			
 			
