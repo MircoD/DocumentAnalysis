@@ -14,8 +14,9 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		
-		Gui gui = new Gui();
+		POSTagger tagger = new POSTagger();
+		tagger.importAndCountCorpus();
+		Gui gui = new Gui(tagger);
 
 		
 	}
