@@ -21,6 +21,8 @@ import javax.swing.JPanel;
 
 public class Gui {
 
+	POSTagger tagger;
+	Logger log = new Logger();
 	private JFrame window = new JFrame();
 	private JPanel boxes = new JPanel();
 	private JCheckBox checkBoxAll = new JCheckBox("Select all");
@@ -32,8 +34,9 @@ public class Gui {
 	private JFileChooser chooser = new JFileChooser();
 	private JLabel label3 = new JLabel("");
 
-	public Gui() {
-
+	public Gui(POSTagger tag) {
+		this.tagger = tag;
+	
 		window.setSize(600, 200);
 		window.setTitle("Document Analysis Tool");
 		window.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -100,6 +103,7 @@ public class Gui {
 								checkBoxTokens.isSelected(),
 								checkBoxPos.isSelected(),
 								checkBoxStems.isSelected());
+						
 					} else {
 						// do nothing
 					}
@@ -125,7 +129,9 @@ public class Gui {
 
 	private void analyseFile(String path, boolean sentences, boolean tokens,
 			boolean pos, boolean stems) {
-
+		label3.setForeground(Color.BLACK);
+		label3.setText("Generating output...");
+		
 		String text = readFile(path);
 		if (text == null) {
 			label3.setForeground(Color.RED);
@@ -135,7 +141,7 @@ public class Gui {
 		
 		Tokenizer tokenizer = new Tokenizer();
 		Stemmer stemm = new Stemmer();
-		POSTagger tagger = new POSTagger();
+		boolean failed = false;
 		
 		if (sentences) {
 			String[] result = tokenizer.splitSentences(text);
@@ -145,19 +151,20 @@ public class Gui {
 		}
 		
 		if (tokens) {
+			log.log("tokens tag stemm", "output");
 			String[] result = tokenizer.splitTokens(text);
-			output("tokens.txt", result);
 			label3.setForeground(Color.BLACK);
 			label3.setText("Output tokens: Done.");
 			
 			if (pos&&stems) {
-				tagger.importAndCountCorpus();
 				String [] result3 = tagger.assignPosToWords(result);
-				output("tagged.txt", result3);
+				String[] result2 = stemm.stem(result, result3);
+				for(int i=0;i<result.length;i++){
+					log.log(result[i] +" " + result3[i] + " " + result2[i], "output");
+				}
+				
 				label3.setForeground(Color.BLACK);
 				label3.setText("Output POS-tags: Done.");
-				String[] result2 = stemm.stem(result, result3);
-				output("stems.txt", result2);
 				label3.setForeground(Color.BLACK);
 				label3.setText("Output stems: Done.");
 			} else if(!stems){
@@ -169,11 +176,15 @@ public class Gui {
 			
 			
 		} else if(pos || stems){
-			label3.setForeground(Color.BLACK);
-			label3.setText("It didn't work. Stemming and POS-Tagging both need tokenization first.");
-			
+			label3.setForeground(Color.RED);
+			label3.setText("Error: Stemming and POS-Tagging both need tokenization first.");
+			failed = true;
 		}
 		
+		if (!failed) {
+			label3.setForeground(Color.BLACK);
+			label3.setText("Output successfully completed!");
+		}
 
 	}
 
