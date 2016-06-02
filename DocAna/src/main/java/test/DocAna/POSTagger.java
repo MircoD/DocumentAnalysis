@@ -54,12 +54,12 @@ public class POSTagger {
 		try {
 
 			File folder = new File(
-					"E:/Studium/Informatik/DocumentAnalysis/brown");
+					"C:/Users/Maurice/Desktop/Studium/6. Semester/CMDA/brown");
 			File[] listOfFiles = folder.listFiles();
 			
 			for (File file : listOfFiles) {
 				if (file.isFile()) {
-					String path = "E:/Studium/Informatik/DocumentAnalysis/brown/"
+					String path = "C:/Users/Maurice/Desktop/Studium/6. Semester/CMDA/brown/"
 							+ file.getName();
 					Scanner scanner = new Scanner(new File(path));
 					
