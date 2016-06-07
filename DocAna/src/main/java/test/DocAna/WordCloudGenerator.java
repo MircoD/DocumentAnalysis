@@ -1,8 +1,16 @@
 package test.DocAna;
 
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.kennycason.kumo.*;
+import com.kennycason.kumo.bg.CircleBackground;
+import com.kennycason.kumo.font.scale.SqrtFontScalar;
+import com.kennycason.kumo.nlp.FrequencyAnalyzer;
+import com.kennycason.kumo.palette.ColorPalette;
 
 /*
  * -->!!README!!<--
