@@ -19,11 +19,11 @@ public class Tokenizer {
 	public String[] splitSentences(String text) {
 
 		// common abbreviations, including one character abbreviations
-		String abbreviations = "(\\s(etc|approx|Mr|Mrs|Jr|\\w|((\\w\\.){1,5}\\w)|cf|ref|"
-				+ "Attn|dept|Dept|Univ|Prof|Dr|est|Yrs|Yr|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|"
-				+ "Oct|Nov|Dec|def|prob))";
+		String abbreviations = "(etc|approx|Mr|Mrs|Jr|((\\w\\.){1,10}\\w)|cf|ref|"
+				+ "Attn|dept|Dept|Univ|Prof|Dr|Yrs|Yr|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|"
+				+ "Oct|Nov|Dec|def|prob)";
 
-		String splitRegex = "((?<!" + abbreviations + ")(\\.+)(?!(\\d+)))|(\\?+)|(\\!+)";
+		String splitRegex = "((?<=((?<!" + abbreviations + ")\\.+)))()(?=(\\s[A-Z]))|((?<=(\\?+))()(?=(\\s?\\w)))|((?<=(\\!+))()(?=(\\s?\\w)))";
 		
 		String[] sentences = text.split(splitRegex);
 		
