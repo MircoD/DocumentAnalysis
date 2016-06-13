@@ -49,6 +49,8 @@ public class Similarity {
 			}
 			
 		}
+		
+			
 		return frequencyCountMatrix;
 	}
 	
@@ -63,8 +65,11 @@ public class Similarity {
 				double sumAB=0;
 				double sumA=0;
 				double sumB=0;
+				System.out.println("i " +countMatrixNormalized.get(i).size());
+				System.out.println("j " +countMatrixNormalized.get(j).size());
 				
 				for(int k =0;k<countMatrixNormalized.get(i).size();k++){
+					
 					double a = countMatrixNormalized.get(i).get(k);
 					double b = countMatrixNormalized.get(j).get(k);
 					
@@ -131,6 +136,7 @@ public class Similarity {
 		    	normalizedMatrix.set(i, tmpCounts);
 		    }
 		}
+			
 		return normalizedMatrix;
 	}
 

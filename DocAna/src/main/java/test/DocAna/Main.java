@@ -41,8 +41,8 @@ public class Main {
 		ArrayList<ArrayList<Double>> frequencyCountMatrixNormalized;
 		ArrayList<ArrayList<Double>> similarityMatrix = new ArrayList<ArrayList<Double>>();
 		String[] pos;
-		String stemm[];
 		
+		Logger log = new Logger();
 		POSTagger tagger = new POSTagger();
 		Reader reader = new Reader();
 		Similarity similarity = new Similarity();
@@ -50,7 +50,7 @@ public class Main {
 		
 		tagger.importAndCountCorpus();
 		listOfReviews = reader
-				.readAndClear("e://Downloads/docAnaTextSample.rtf");
+				.readAndClear("c://docAnaTextSample.rtf");
 
 		System.out.println("reader done");
 		
@@ -60,7 +60,7 @@ public class Main {
 			tmp.setText(stemmer.stem(listOfReviews.get(i).getText(), pos));	
 			listOfReviews.set(i,tmp);
 		}
-		
+		System.out.println("stemmer done");
 		
 		for (int i = 0; i < listOfReviews.size(); i++) {
 			
@@ -84,8 +84,17 @@ public class Main {
 			
 		
 		frequencyCountMatrix = similarity.countTermFrequency(listOfMovies);
+		System.out.println("fq matrix done");
+		
 		frequencyCountMatrixNormalized = similarity.normalize(frequencyCountMatrix);
+		System.out.println("fq matrix normalized done");
+		
 		similarityMatrix = similarity.measureSimilarity(frequencyCountMatrixNormalized);
+		for(int i=0;i<similarityMatrix.size();i++){
+			log.log(listOfMovies.get(i).getMovieID() + " " + similarityMatrix.get(i).toString(), "wololo");
+			
+		}
+		
 
 	}
 }
