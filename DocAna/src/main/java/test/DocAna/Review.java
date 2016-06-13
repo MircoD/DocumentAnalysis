@@ -16,11 +16,11 @@ public class Review {
 	private int score;
 	private long time;
 	private String summary;
-	private String text;
+	private String[] text;
 
 	public Review(String productId, String userId, String profileName,
 			int helpfulness_denom,int helpfulness_enum,int score, long time, String summary,
-			String text) {
+			String[] text) {
 		this.productId = productId;
 		this.userId = userId;
 		this.profileName = profileName;
@@ -99,14 +99,15 @@ public class Review {
 		this.summary = summary;
 	}
 
-	public String getText() {
+
+	public String[] getText() {
 		return text;
 	}
 
-	public void setText(String text) {
+
+	public void setText(String[] text) {
 		this.text = text;
 	}
-
 
 
 }

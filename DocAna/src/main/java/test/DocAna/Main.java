@@ -42,7 +42,8 @@ public class Main {
 		
 		Reader reader = new Reader();
 		reader.readAndClear("e://Downloads/docAnaTextSample.rtf");
-
+		
+		
 		
 	}
 }

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -23,6 +22,7 @@ public class Reader {
 		
 
 		Logger log = new Logger();
+		Tokenizer token = new Tokenizer();
 		ArrayList<Review> listOfReviews = new ArrayList<Review>();
 		Map<String, Integer> countAuthors = new HashMap<String, Integer>();
 		Map<String, Integer> countMovies = new HashMap<String, Integer>();
@@ -144,8 +144,9 @@ public class Reader {
 						prod.compareTo("B000KKQNRO") == 0 || 
 						prod.compareTo("B0002Y69NQ") == 0 || 
 						prod.compareTo("B005CA4SJW") == 0){
+					String[] tmp = token.splitTokens(text);
 				listOfReviews.add(new Review(prod, user, profil, help_denom,
-						help_enum, score, time, summary, text));
+						help_enum, score, time, summary, tmp));
 				}
 			}
 
