@@ -3,8 +3,6 @@ package test.DocAna;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -20,12 +18,8 @@ public class Reader {
 
 	public ArrayList<Review> readAndClear(String filePath) {
 		
-
-		Logger log = new Logger();
 		Tokenizer token = new Tokenizer();
 		ArrayList<Review> listOfReviews = new ArrayList<Review>();
-		Map<String, Integer> countAuthors = new HashMap<String, Integer>();
-		Map<String, Integer> countMovies = new HashMap<String, Integer>();
 		String prod = new String();
 		String user = new String();
 		String profil = new String();
@@ -35,14 +29,14 @@ public class Reader {
 		long time = 0;
 		String summary = new String();
 		String text = new String();
-		int a = 0;
+
 
 		try {
 			Scanner scanner = new Scanner(new File(filePath));
 			scanner.skip("(?s).{350}"); // skip all formating at the beginning
 
 			while (scanner.hasNextLine()) {
-				a++;
+
 				if (scanner.hasNext("product/productId:")) {
 					scanner.skip("product/productId:");
 					prod = removeFirstChar(removeLastChar(scanner.nextLine()));
@@ -107,22 +101,6 @@ public class Reader {
 				}
 
 				scanner.nextLine();
-
-				/*
-				if(countAuthors.containsKey(user)){
-					countAuthors.put(user, countAuthors.get(user)+1);
-					
-				} else{
-					countAuthors.put(user,1);
-				}
-				if(countMovies.containsKey(prod)){
-					countMovies.put(prod, countMovies.get(prod)+1);
-					
-				} else{
-					countMovies.put(prod,1);
-				}
-				
-				*/
 				
 				if(prod.compareTo("B002LBKDYE") == 0 ||
 						prod.compareTo("B004WO6BPS") == 0 ||
@@ -155,30 +133,6 @@ public class Reader {
 		} catch (FileNotFoundException e) {
 			System.out.println("File Not Found");
 		}
-
-		/*	
-	 Iterator it1 = countAuthors.keySet().iterator(); 
-	 Iterator it2 = countMovies.keySet().iterator();
-	 
-	 while(it1.hasNext()){
-		 String tmp = it1.next().toString();
-		 int tmp1 = countAuthors.get(tmp);
-		 
-		 if(tmp1 >10){
-			 log.log(tmp.toString() + " " + countAuthors.get(tmp), "authors");
-			 }
-	 }
-	 
-	 while(it2.hasNext()){
-		 String tmp = it2.next().toString();
-		 int tmp1 = countMovies.get(tmp);
-		 
-		 if(tmp1 >10){
-		 log.log(tmp.toString() + " " + countMovies.get(tmp), "movies");
-		 }
-	 }
-	 
-	 */
 		
 		return listOfReviews;
 
