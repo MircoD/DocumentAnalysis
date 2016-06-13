@@ -78,10 +78,53 @@ public class TermFrequency {
 		return totalFrequency;
 	}
 	
+	/*
+	 * Finds the highest term frequency in the document at index
+	 */
+	public int maxFrequency(ArrayList<ArrayList<Integer>> frequencyCountMatrix, int index) {
+		int max = -1;
+		for (int i = 0; i < frequencyCountMatrix.size(); i++) {
+			int tmp = frequencyCountMatrix.get(index).get(i);
+			if (tmp > max) {
+				max = tmp;
+			}
+		}
+		return max;
+	}
+	
+	/*
+	 * Normalizes the Frequency Count Matrix using df idf.
+	 */
 	public ArrayList<ArrayList<Double>> normalize(ArrayList<ArrayList<Integer>> frequencyCountMatrix) {
 		ArrayList<ArrayList<Double>> normalizedMatrix = new ArrayList<ArrayList<Double>>();
+		int numberOfDocuments = frequencyCountMatrix.size();
+		int numberOfWords = frequencyCountMatrix.get(0).size();
 		
-		
+		// initialise matrix to be the same size as the original one
+		for (int i = 0; i < numberOfDocuments; i++) {
+			ArrayList<Double> counts = new ArrayList<Double>();
+			for (int j = 0; j < numberOfWords; j++) {
+				counts.add(0.0);
+			}
+			normalizedMatrix.add(counts);
+		}
+			
+		// set normalized values
+		for (Map.Entry<String, Integer> entry : words.entrySet())
+		{
+			int index = entry.getValue();
+			String word = entry.getKey();
+		    
+		    for (int i = 0; i < numberOfDocuments; i++) {
+		    	double oldValue = (double) frequencyCountMatrix.get(i).get(index);
+		    	double max = (double) maxFrequency(frequencyCountMatrix, i);
+		    	double normalized = oldValue / max;
+		    	
+		    	ArrayList<Double> tmpCounts = normalizedMatrix.get(i);
+		    	tmpCounts.set(index, normalized);
+		    	normalizedMatrix.set(i, tmpCounts);
+		    }
+		}
 		return normalizedMatrix;
 	}
 }
