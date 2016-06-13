@@ -32,9 +32,7 @@ import java.util.ArrayList;
 public class Main {
 
 	public static void main(String[] args) {
-
-		// POSTagger tagger = new POSTagger();
-		// tagger.importAndCountCorpus();
+	
 		// Gui gui = new Gui(tagger);
 
 		ArrayList<Review> listOfReviews = new ArrayList<Review>();
@@ -42,13 +40,26 @@ public class Main {
 		ArrayList<ArrayList<Integer>> frequencyCountMatrix;
 		ArrayList<ArrayList<Double>> frequencyCountMatrixNormalized;
 		ArrayList<ArrayList<Double>> similarityMatrix = new ArrayList<ArrayList<Double>>();
+		String[] pos;
+		String stemm[];
 		
+		POSTagger tagger = new POSTagger();
 		Reader reader = new Reader();
 		Similarity similarity = new Similarity();
+		Stemmer stemmer = new Stemmer();
+		
+		tagger.importAndCountCorpus();
 		listOfReviews = reader
 				.readAndClear("e://Downloads/docAnaTextSample.rtf");
 
 		System.out.println("reader done");
+		
+		for (int i = 0; i < listOfReviews.size(); i++) {
+			pos = tagger.assignPosToWords(listOfReviews.get(i).getText());
+			Review tmp = listOfReviews.get(i);
+			tmp.setText(stemmer.stem(listOfReviews.get(i).getText(), pos));	
+			listOfReviews.set(i,tmp);
+		}
 		
 		
 		for (int i = 0; i < listOfReviews.size(); i++) {
