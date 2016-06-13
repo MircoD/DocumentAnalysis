@@ -81,6 +81,7 @@ public class TermFrequency {
 	public ArrayList<ArrayList<Double>> normalize(ArrayList<ArrayList<Integer>> frequencyCountMatrix) {
 		ArrayList<ArrayList<Double>> normalizedMatrix = new ArrayList<ArrayList<Double>>();
 		
+		
 		return normalizedMatrix;
 	}
 }
