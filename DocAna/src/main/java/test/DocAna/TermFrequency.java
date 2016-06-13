@@ -3,14 +3,18 @@ package test.DocAna;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class TermFrequency {
 
-	public void count(ArrayList<Movies> movies){
+	private HashMap<String, Integer> words;
+	private ArrayList<ArrayList<Integer>> frequencyCountMatrix;
+	
+	public ArrayList<ArrayList<Integer>> count(ArrayList<Movies> movies){
 		
 		Logger log = new Logger();
-		ArrayList<ArrayList<Integer>> frequencyCountMatrix = new ArrayList<ArrayList<Integer>>();
-		HashMap<String, Integer> words = new HashMap<String, Integer>();
+		frequencyCountMatrix = new ArrayList<ArrayList<Integer>>();
+		words = new HashMap<String, Integer>();
 		
 		for(int i=0;i<movies.size();i++){
 			frequencyCountMatrix.add(new ArrayList<Integer>());
@@ -68,5 +72,20 @@ public class TermFrequency {
 			}
 		}
 		
+		return frequencyCountMatrix;
+	}
+	
+	/*
+	 * Counts the frequency (in -all- documents) of each word.
+	 */
+	public HashMap<String, Integer> countAll() {
+		HashMap<String, Integer> totalFrequency = new HashMap<String, Integer>();
+		
+		for (Map.Entry<String, Integer> entry : words.entrySet())
+		{
+		    System.out.println(entry.getKey() + "/" + entry.getValue());
+		}
+		
+		return totalFrequency;
 	}
 }
