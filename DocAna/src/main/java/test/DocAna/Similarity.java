@@ -2,17 +2,13 @@ package test.DocAna;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
-public class TermFrequency {
-
+public class Similarity {
 	private HashMap<String, Integer> words;
 	private ArrayList<ArrayList<Integer>> frequencyCountMatrix;
 	
-	public ArrayList<ArrayList<Integer>> count(ArrayList<Movies> movies){
+	public ArrayList<ArrayList<Integer>> countTermFrequency(ArrayList<Movies> movies){
 		
-		Logger log = new Logger();
 		frequencyCountMatrix = new ArrayList<ArrayList<Integer>>();
 		words = new HashMap<String, Integer>();
 		
@@ -55,28 +51,37 @@ public class TermFrequency {
 		return frequencyCountMatrix;
 	}
 	
-	/*
-	 * Counts the frequency (in -all- documents) of each word.
-	 */
-	public HashMap<String, Integer> countAll() {
-		HashMap<String, Integer> totalFrequency = new HashMap<String, Integer>();
+	
+	public ArrayList<ArrayList<Double>> measureSimilarity(ArrayList<ArrayList<Double>> countMatrixNormalized){
+		ArrayList<ArrayList<Double>> similarityMatrix = new ArrayList<ArrayList<Double>>();
 		
-		for (Map.Entry<String, Integer> entry : words.entrySet())
-		{
-			String word = entry.getKey();
-		    int countIndex = entry.getValue();
-		    int count = 0;
-		    
-		    // add all the counts from each document
-		    for (int i = 0; i < frequencyCountMatrix.size(); i++) {
-		    	count += frequencyCountMatrix.get(i).get(countIndex);
-		    }
-		    
-		    totalFrequency.put(word, count);
+		for(int i=0;i<countMatrixNormalized.size();i++){
+			ArrayList<Double> rowi = countMatrixNormalized.get(i);
+			
+			for(int j =0; j<countMatrixNormalized.size();j++){
+				double sumAB=0;
+				double sumA=0;
+				double sumB=0;
+				
+				for(int k =0;k<countMatrixNormalized.get(i).size();k++){
+					double a = countMatrixNormalized.get(i).get(k);
+					double b = countMatrixNormalized.get(j).get(k);
+					
+					sumAB = sumAB + a*b;
+					sumA = sumA + a*a;
+					sumB = sumB + b*b;
+				}						
+				rowi.add(sumAB/(Math.sqrt(sumA))*(Math.sqrt(sumB)));
+				
+			}
+			
+			similarityMatrix.add(rowi);
 		}
 		
-		return totalFrequency;
+		return similarityMatrix;
+		
 	}
+	
 	
 	public ArrayList<ArrayList<Double>> normalize(ArrayList<ArrayList<Integer>> frequencyCountMatrix) {
 		ArrayList<ArrayList<Double>> normalizedMatrix = new ArrayList<ArrayList<Double>>();
@@ -84,4 +89,5 @@ public class TermFrequency {
 		
 		return normalizedMatrix;
 	}
+
 }

@@ -39,12 +39,18 @@ public class Main {
 
 		ArrayList<Review> listOfReviews = new ArrayList<Review>();
 		ArrayList<Movies> listOfMovies = new ArrayList<Movies>();
+		ArrayList<ArrayList<Integer>> frequencyCountMatrix;
+		ArrayList<ArrayList<Double>> frequencyCountMatrixNormalized;
+		ArrayList<ArrayList<Double>> similarityMatrix = new ArrayList<ArrayList<Double>>();
+		
 		Reader reader = new Reader();
-		TermFrequency tf = new TermFrequency();
+		Similarity similarity = new Similarity();
 		listOfReviews = reader
 				.readAndClear("e://Downloads/docAnaTextSample.rtf");
 
 		System.out.println("reader done");
+		
+		
 		for (int i = 0; i < listOfReviews.size(); i++) {
 			
 			boolean newMovie =true;
@@ -64,9 +70,11 @@ public class Main {
 				listOfMovies.add(new Movies(listOfReviews.get(i).getProductId(), listOfReviews.get(i) ));
 			}
 		}
+			
 		
-		tf.count(listOfMovies);
-		
+		frequencyCountMatrix = similarity.countTermFrequency(listOfMovies);
+		frequencyCountMatrixNormalized = similarity.normalize(frequencyCountMatrix);
+		similarityMatrix = similarity.measureSimilarity(frequencyCountMatrixNormalized);
 
 	}
 }
