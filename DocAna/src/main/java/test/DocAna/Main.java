@@ -47,7 +47,7 @@ public class Main {
 		Reader reader = new Reader();
 		Similarity similarity = new Similarity();
 		Stemmer stemmer = new Stemmer();
-		
+	
 		tagger.importAndCountCorpus();
 		listOfReviews = reader
 				.readAndClear("c://docAnaTextSample.rtf");

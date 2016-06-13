@@ -59,14 +59,12 @@ public class Similarity {
 		ArrayList<ArrayList<Double>> similarityMatrix = new ArrayList<ArrayList<Double>>();
 		
 		for(int i=0;i<countMatrixNormalized.size();i++){
-			ArrayList<Double> rowi = countMatrixNormalized.get(i);
+			ArrayList<Double> rowi = new ArrayList<Double>();
 			
 			for(int j =0; j<countMatrixNormalized.size();j++){
 				double sumAB=0;
 				double sumA=0;
 				double sumB=0;
-				System.out.println("i " +countMatrixNormalized.get(i).size());
-				System.out.println("j " +countMatrixNormalized.get(j).size());
 				
 				for(int k =0;k<countMatrixNormalized.get(i).size();k++){
 					
@@ -76,9 +74,9 @@ public class Similarity {
 					sumAB = sumAB + a*b;
 					sumA = sumA + a*a;
 					sumB = sumB + b*b;
-				}						
-				rowi.add(sumAB/(Math.sqrt(sumA))*(Math.sqrt(sumB)));
+				}
 				
+				rowi.add(sumAB/(Math.sqrt(sumA))*(Math.sqrt(sumB)));
 			}
 			
 			similarityMatrix.add(rowi);
