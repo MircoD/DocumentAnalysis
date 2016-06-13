@@ -52,26 +52,6 @@ public class TermFrequency {
 			}
 			
 		}
-		
-		int amountWords =words.size();
-		System.out.println(amountWords);
-			
-		Iterator itr = words.keySet().iterator();
-		while(itr.hasNext()){
-			String tmp123 = itr.next().toString();
-			log.log(tmp123 + " "+ words.get(tmp123) , "words");
-			
-		}
-		
-		for(int i=0; i< movies.size();i++){
-			System.out.println(frequencyCountMatrix.get(i).size());
-			ArrayList<Review> currentListOfReview = movies.get(i).getReviews();
-			String tmp = movies.get(i).movieID;
-			for(int j=0;j<amountWords;j++){
-			log.log(frequencyCountMatrix.get(i).get(j).toString(), tmp);
-			}
-		}
-		
 		return frequencyCountMatrix;
 	}
 	
@@ -83,7 +63,16 @@ public class TermFrequency {
 		
 		for (Map.Entry<String, Integer> entry : words.entrySet())
 		{
-		    System.out.println(entry.getKey() + "/" + entry.getValue());
+			String word = entry.getKey();
+		    int countIndex = entry.getValue();
+		    int count = 0;
+		    
+		    // add all the counts from each document
+		    for (int i = 0; i < frequencyCountMatrix.size(); i++) {
+		    	count += frequencyCountMatrix.get(i).get(countIndex);
+		    }
+		    
+		    totalFrequency.put(word, count);
 		}
 		
 		return totalFrequency;
