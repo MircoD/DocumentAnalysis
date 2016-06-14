@@ -1,6 +1,7 @@
 package test.DocAna;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /*
  B002LBKDYE
@@ -40,29 +41,31 @@ public class Main {
 		ArrayList<ArrayList<Integer>> frequencyCountMatrix;
 		ArrayList<ArrayList<Double>> frequencyCountMatrixNormalized;
 		ArrayList<ArrayList<Double>> similarityMatrix = new ArrayList<ArrayList<Double>>();
+		ArrayList<ArrayList<String[]>> posList = new ArrayList<ArrayList<String[]>>();
 		String[] pos;
+		String[] filter ={"jj","rb"};
 		
+		WordCloudGenerator wordCloud = new WordCloudGenerator();
 		Logger log = new Logger();
 		POSTagger tagger = new POSTagger();
 		Reader reader = new Reader();
 		Similarity similarity = new Similarity();
 		Stemmer stemmer = new Stemmer();
-	
+
 		tagger.importAndCountCorpus();
 		listOfReviews = reader
 				.readAndClear("c://docAnaTextSample.rtf");
 
 		System.out.println("reader done");
+	
 		
+		//adds the reviews to the listOfMovies
 		for (int i = 0; i < listOfReviews.size(); i++) {
 			pos = tagger.assignPosToWords(listOfReviews.get(i).getText());
-			Review tmp = listOfReviews.get(i);
-			tmp.setText(stemmer.stem(listOfReviews.get(i).getText(), pos));	
-			listOfReviews.set(i,tmp);
-		}
-		System.out.println("stemmer done");
-		
-		for (int i = 0; i < listOfReviews.size(); i++) {
+			Review tmpRev = listOfReviews.get(i);
+			tmpRev.setText(stemmer.stem(listOfReviews.get(i).getText(), pos));
+			tmpRev.setPos(pos);
+			listOfReviews.set(i,tmpRev);
 			
 			boolean newMovie =true;
 
@@ -81,7 +84,20 @@ public class Main {
 				listOfMovies.add(new Movies(listOfReviews.get(i).getProductId(), listOfReviews.get(i) ));
 			}
 		}
-			
+				
+		System.out.println("stemmer done");
+		
+		String[] tmpText = new String[0];
+		String[] tmpPos = new String[0];
+		for(int i=0;i<listOfMovies.get(1).getReviews().size();i++){
+			Review tmpRev = listOfMovies.get(1).getReviews().get(i);
+			tmpText = log.concat(tmpText, tmpRev.getText());	
+			tmpPos = log.concat(tmpPos, tmpRev.getText());		
+		}
+		
+		List<String> tmpList = wordCloud.filterByPos(tmpText, tmpPos, filter);
+		wordCloud.createWordCloud(tmpList,"1");
+		
 		
 		frequencyCountMatrix = similarity.countTermFrequency(listOfMovies);
 		System.out.println("fq matrix done");
@@ -90,10 +106,6 @@ public class Main {
 		System.out.println("fq matrix normalized done");
 		
 		similarityMatrix = similarity.measureSimilarity(frequencyCountMatrixNormalized);
-		for(int i=0;i<similarityMatrix.size();i++){
-			log.log(listOfMovies.get(i).getMovieID() + " " + similarityMatrix.get(i).toString(), "wololo");
-			
-		}
 		
 
 	}

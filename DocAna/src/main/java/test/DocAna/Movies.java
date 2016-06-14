@@ -7,6 +7,7 @@ public class Movies {
 	String movieID;
 	ArrayList<Review> reviews;
 
+
 	public Movies (String movieID, Review review){
 		this.movieID = movieID;
 		this.reviews = new ArrayList<Review>();
@@ -28,6 +29,6 @@ public class Movies {
 	public void setReviews(ArrayList<Review> reviews) {
 		this.reviews = reviews;
 	}
-	
+
 	
 }

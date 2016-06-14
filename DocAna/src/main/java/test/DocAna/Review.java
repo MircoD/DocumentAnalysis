@@ -17,6 +17,7 @@ public class Review {
 	private long time;
 	private String summary;
 	private String[] text;
+	private String[] pos;
 
 	public Review(String productId, String userId, String profileName,
 			int helpfulness_denom,int helpfulness_enum,int score, long time, String summary,
@@ -30,6 +31,7 @@ public class Review {
 		this.time = time;
 		this.summary = summary;
 		this.text = text;
+		this.pos = new String[0];
 	}
 	
 
@@ -107,6 +109,16 @@ public class Review {
 
 	public void setText(String[] text) {
 		this.text = text;
+	}
+
+
+	public String[] getPos() {
+		return pos;
+	}
+
+
+	public void setPos(String[] pos) {
+		this.pos = pos;
 	}
 
 

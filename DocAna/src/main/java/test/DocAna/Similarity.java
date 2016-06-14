@@ -8,6 +8,8 @@ public class Similarity {
 	private HashMap<String, Integer> words;
 	private ArrayList<ArrayList<Integer>> frequencyCountMatrix;
 	
+	
+	//counts TermFrequency
 	public ArrayList<ArrayList<Integer>> countTermFrequency(ArrayList<Movies> movies){
 		
 		frequencyCountMatrix = new ArrayList<ArrayList<Integer>>();
@@ -76,7 +78,7 @@ public class Similarity {
 					sumB = sumB + b*b;
 				}
 				
-				rowi.add(sumAB/(Math.sqrt(sumA))*(Math.sqrt(sumB)));
+				rowi.add(sumAB/((Math.sqrt(sumA))*(Math.sqrt(sumB))));
 			}
 			
 			similarityMatrix.add(rowi);
