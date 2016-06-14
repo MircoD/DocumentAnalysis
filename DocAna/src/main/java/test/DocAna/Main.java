@@ -41,11 +41,8 @@ public class Main {
 		ArrayList<ArrayList<Integer>> frequencyCountMatrix;
 		ArrayList<ArrayList<Double>> frequencyCountMatrixNormalized;
 		ArrayList<ArrayList<Double>> similarityMatrix = new ArrayList<ArrayList<Double>>();
-		ArrayList<ArrayList<String[]>> posList = new ArrayList<ArrayList<String[]>>();
 		String[] pos;
-		String[] filter ={"jj","rb"};
-		
-		WordCloudGenerator wordCloud = new WordCloudGenerator();
+
 		Logger log = new Logger();
 		POSTagger tagger = new POSTagger();
 		Reader reader = new Reader();
@@ -87,17 +84,57 @@ public class Main {
 				
 		System.out.println("stemmer done");
 		
-		String[] tmpText = new String[0];
-		String[] tmpPos = new String[0];
+
 		for(int i=0;i<listOfMovies.get(1).getReviews().size();i++){
-			Review tmpRev = listOfMovies.get(1).getReviews().get(i);
-			tmpText = log.concat(tmpText, tmpRev.getText());	
-			tmpPos = log.concat(tmpPos, tmpRev.getText());		
+			for(int j=0;j<listOfMovies.get(1).getReviews().get(i).getText().length;j++){
+				String currentPos = listOfMovies.get(1).getReviews().get(i).getPos()[j];
+				if(currentPos.compareTo("jj") == 0 ||currentPos.compareTo("rb") == 0){
+				log.log(listOfMovies.get(1).getReviews().get(i).getText()[j], "1");
+				}
+			}	
 		}
 		
-		List<String> tmpList = wordCloud.filterByPos(tmpText, tmpPos, filter);
-		wordCloud.createWordCloud(tmpList,"1");
+		for(int i=0;i<listOfMovies.get(13).getReviews().size();i++){
+			for(int j=0;j<listOfMovies.get(13).getReviews().get(i).getText().length;j++){
+				String currentPos = listOfMovies.get(13).getReviews().get(i).getPos()[j];
+				if(currentPos.compareTo("jj") == 0 ||currentPos.compareTo("rb") == 0){
+				log.log(listOfMovies.get(13).getReviews().get(i).getText()[j], "13");
+				}
+			}	
+		}
+		for(int i=0;i<listOfMovies.get(14).getReviews().size();i++){
+			for(int j=0;j<listOfMovies.get(14).getReviews().get(i).getText().length;j++){
+				String currentPos = listOfMovies.get(14).getReviews().get(i).getPos()[j];
+				if(currentPos.compareTo("jj") == 0 ||currentPos.compareTo("rb") == 0){
+				log.log(listOfMovies.get(14).getReviews().get(i).getText()[j], "14");
+				}
+			}	
+		}
 		
+		for(int i=0;i<listOfMovies.get(2).getReviews().size();i++){
+			for(int j=0;j<listOfMovies.get(2).getReviews().get(i).getText().length;j++){
+				String currentPos = listOfMovies.get(2).getReviews().get(i).getPos()[j];
+				if(currentPos.compareTo("jj") == 0 ||currentPos.compareTo("rb") == 0){
+				log.log(listOfMovies.get(2).getReviews().get(i).getText()[j], "2");
+				}
+			}	
+		}
+		for(int i=0;i<listOfMovies.get(7).getReviews().size();i++){
+			for(int j=0;j<listOfMovies.get(7).getReviews().get(i).getText().length;j++){
+				String currentPos = listOfMovies.get(7).getReviews().get(i).getPos()[j];
+				if(currentPos.compareTo("jj") == 0 ||currentPos.compareTo("rb") == 0){
+				log.log(listOfMovies.get(7).getReviews().get(i).getText()[j], "7");
+				}
+			}	
+		}
+		for(int i=0;i<listOfMovies.get(18).getReviews().size();i++){
+			for(int j=0;j<listOfMovies.get(18).getReviews().get(i).getText().length;j++){
+				String currentPos = listOfMovies.get(18).getReviews().get(i).getPos()[j];
+				if(currentPos.compareTo("jj") == 0 ||currentPos.compareTo("rb") == 0){
+				log.log(listOfMovies.get(18).getReviews().get(i).getText()[j], "18");
+				}
+			}	
+		}
 		
 		frequencyCountMatrix = similarity.countTermFrequency(listOfMovies);
 		System.out.println("fq matrix done");
