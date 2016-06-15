@@ -136,6 +136,20 @@ public class Similarity {
 	}
 	
 	/*
+	 * Counts in how many documents the word at index occurs
+	 */
+	public int occurences(ArrayList<ArrayList<Integer>> frequencyCountMatrix, int index) {
+		int count = 0;
+		for (int i = 0; i < frequencyCountMatrix.size(); i++) {
+			if (frequencyCountMatrix.get(i).get(index) > 0) {
+				count++;
+			}
+			
+		}
+		return count;
+	}
+	
+	/*
 	 * Normalizes the Frequency Count Matrix using df idf.
 	 */
 	public ArrayList<ArrayList<Double>> normalize(ArrayList<ArrayList<Integer>> frequencyCountMatrix) {
@@ -161,17 +175,18 @@ public class Similarity {
 		    for (int i = 0; i < numberOfDocuments; i++) {
 		    	double oldValue = (double) frequencyCountMatrix.get(i).get(index);
 		    	double max = (double) maxFrequency(frequencyCountMatrix, i);
-		    	double normalized = oldValue / max;
+		    	double tf = oldValue / max;
+		    	double ni = occurences(frequencyCountMatrix, index);
+		    	
+		    	double tfIdf = tf * Math.log10(numberOfDocuments / ni);
 		    	
 		    	ArrayList<Double> tmpCounts = normalizedMatrix.get(i);
-		    	tmpCounts.set(index, normalized);
+		    	tmpCounts.set(index, tfIdf);
 		    	normalizedMatrix.set(i, tmpCounts);
 		    }
 		}
 			
 		return normalizedMatrix;
 	}
-	
-	
 
 }
