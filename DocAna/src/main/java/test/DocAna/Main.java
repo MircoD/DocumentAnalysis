@@ -39,7 +39,7 @@ public class Main {
 
 		ArrayList<Review> listOfReviews = new ArrayList<Review>();
 		HashMap<String, Movies> listOfMoviesFull = new HashMap<String, Movies>();
-		HashMap<String, Movies> listOfMoviesFilterd = new HashMap<String, Movies>();
+		ArrayList<Movies> listOfMoviesFilterd = new ArrayList<Movies>();
 		HashMap<String, Authors> listOfAuthors = new HashMap<String, Authors>();
 		ArrayList<ArrayList<Integer>> frequencyCountMatrix;
 		ArrayList<ArrayList<Double>> frequencyCountMatrixNormalized;
@@ -89,12 +89,11 @@ public class Main {
 		startTime = System.nanoTime();
 
 		Iterator it1 = listOfMoviesFull.keySet().iterator();
+		int m=0;
 		while (it1.hasNext()) {
 			String key = it1.next().toString();
-			Movies tmpMovies = listOfMoviesFull.get(key);
-			if (tmpMovies.getReviews().size() > 30) {
-				listOfMoviesFilterd.put(key, listOfMoviesFull.get(key));
-			
+			if (listOfMoviesFull.get(key).getReviews().size() > 30) {
+				listOfMoviesFilterd.add(listOfMoviesFull.get(key));
 			}
 
 		}
@@ -118,5 +117,21 @@ public class Main {
 				.measureSimilarity(frequencyCountMatrixNormalized);
 		
 		System.out.println("matrix :" + ((System.nanoTime() - startTime)/1000000000.0));
+	
+		for(int i=0;i<similarityMatrix.size();i++){
+			
+			for(int j=0;j<similarityMatrix.get(i).size();j++){
+				if(true){
+				String tmp1=similarityMatrix.get(i).get(j).toString();
+				String tmp2=listOfMoviesFilterd.get(i).getMovieID() + ".." + listOfMoviesFilterd.get(j).getMovieID();
+				
+				log.log(tmp1 + " " + tmp2, "matrix");
+				}
+			}
+			
+		}		
+		
 	}
+	
+	
 }

@@ -16,7 +16,7 @@ public class Similarity {
 
 	
 	//counts TermFrequency
-	public ArrayList<ArrayList<Integer>> countTermFrequency(HashMap<String,Movies> movies){
+	public ArrayList<ArrayList<Integer>> countTermFrequency(ArrayList<Movies> movies){
 		Tokenizer token = new Tokenizer();
 		POSTagger tagger = new POSTagger();
 		Stemmer stemm = new Stemmer();
@@ -31,15 +31,12 @@ public class Similarity {
 			frequencyCountMatrix.add(new ArrayList<Integer>());
 		}
 		
-	
-		
-		Iterator it1 = movies.keySet().iterator();
-		int i =0;
+
 		long startTime = System.nanoTime();
 		String tmpTime;
-		while(it1.hasNext()){
-			long startTime2 = System.nanoTime();
-			ArrayList<Review> currentListOfReview = movies.get(it1.next()).reviews;
+		
+		for(int i=0;i<movies.size();i++){
+			ArrayList<Review> currentListOfReview = movies.get(i).getReviews();
 			
 			//loop through all reviews of a movie
 			for(int j=0;j<currentListOfReview.size();j++){
@@ -49,7 +46,6 @@ public class Similarity {
 				String[] pos = tagger.assignPosToWords(tokens);
 				String[] currentListOfTokens = stemm.stem(tokens, pos);
 				tmpTime = String.valueOf(System.nanoTime() - startTime);
-				log.log(tmpTime, "stemm");
 				
 				
 				//loop through all words of a review
@@ -70,18 +66,25 @@ public class Similarity {
 						
 						ArrayList<Integer> tmp = frequencyCountMatrix.get(i);
 						tmp.set(tmp.size()-1, 1);
-						words.put(currentToken, frequencyCountMatrix.get(0).size()-1);							
+						words.put(currentToken, frequencyCountMatrix.get(0).size()-1);	
+						log.log(currentToken, "words");
 					}
 					
 				}
 				tmpTime = String.valueOf(System.nanoTime() - startTime);
-				log.log(tmpTime, "loopTime");
+				System.out.println(j + " j");
 			}
-			i++;
 			System.out.println(i);
 			
 		}
 		
+		for(int j=0;j<frequencyCountMatrix.get(0).size();j++){
+			if(true){
+			String tmp1=frequencyCountMatrix.get(0).get(j).toString();
+			String tmp2=frequencyCountMatrix.get(1).get(j).toString();
+			log.log(tmp1+ " " + tmp2 , "matrix1");
+			}
+		}
 			
 		return frequencyCountMatrix;
 	}

@@ -101,11 +101,12 @@ public class Reader {
 				}
 
 				scanner.nextLine();
-				
+				if(prod.compareTo("7883704540") ==0 ||
+						prod.compareTo("B000VBJEFK") ==0){
 				
 				listOfReviews.add(new Review(prod, user, profil, help_denom,
 						help_enum, score, time, summary, text));
-				
+				}	
 			}
 
 			scanner.close();
