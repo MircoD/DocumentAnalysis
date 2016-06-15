@@ -102,30 +102,10 @@ public class Reader {
 
 				scanner.nextLine();
 				
-				if(prod.compareTo("B002LBKDYE") == 0 ||
-						prod.compareTo("B004WO6BPS") == 0 ||
-						prod.compareTo("B009NQKPUW") == 0 ||
-						prod.compareTo("B000VBJEFK") == 0 ||
-						prod.compareTo("7883704540") == 0 ||
-						prod.compareTo("B0028OA3EY") == 0 ||
-						prod.compareTo("B0028OA3EO") == 0 ||
-						prod.compareTo("B008PZZND6") == 0 ||
-						prod.compareTo("B006TTC57C") == 0 || 
-						prod.compareTo("B002VL2PTU") == 0 ||
-						prod.compareTo("B001NFNFMQ") == 0 ||
-						prod.compareTo("B000067JG3") == 0 ||
-						prod.compareTo("B000067JG4") == 0 ||
-						prod.compareTo("B000MMMTAK") == 0 ||
-						prod.compareTo("B003DBEX6K") == 0 ||
-						prod.compareTo("B001TAFCBC") == 0 ||
-						prod.compareTo("B0039UTDFG") == 0 ||
-						prod.compareTo("B000KKQNRO") == 0 || 
-						prod.compareTo("B0002Y69NQ") == 0 || 
-						prod.compareTo("B005CA4SJW") == 0){
-					String[] tmp = token.splitTokens(text);
+				
 				listOfReviews.add(new Review(prod, user, profil, help_denom,
-						help_enum, score, time, summary, tmp));
-				}
+						help_enum, score, time, summary, text));
+				
 			}
 
 			scanner.close();

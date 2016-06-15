@@ -2,16 +2,28 @@ package test.DocAna;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class Similarity {
 	private HashMap<String, Integer> words;
 	private ArrayList<ArrayList<Integer>> frequencyCountMatrix;
 	
+	public Similarity(){
+		this.words = new HashMap<String, Integer>();
+		this.frequencyCountMatrix = new ArrayList<ArrayList<Integer>>();
+	}
+
 	
 	//counts TermFrequency
-	public ArrayList<ArrayList<Integer>> countTermFrequency(ArrayList<Movies> movies){
+	public ArrayList<ArrayList<Integer>> countTermFrequency(HashMap<String,Movies> movies){
+		Tokenizer token = new Tokenizer();
+		POSTagger tagger = new POSTagger();
+		Stemmer stemm = new Stemmer();
+		Logger log = new Logger();
 		
+		
+		tagger.importAndCountCorpus();
 		frequencyCountMatrix = new ArrayList<ArrayList<Integer>>();
 		words = new HashMap<String, Integer>();
 		
@@ -19,15 +31,29 @@ public class Similarity {
 			frequencyCountMatrix.add(new ArrayList<Integer>());
 		}
 		
-		//loop through all movies
-		for(int i =0; i < movies.size();i++){
-			ArrayList<Review> currentListOfReview = movies.get(i).getReviews();
+	
+		
+		Iterator it1 = movies.keySet().iterator();
+		int i =0;
+		long startTime = System.nanoTime();
+		String tmpTime;
+		while(it1.hasNext()){
+			long startTime2 = System.nanoTime();
+			ArrayList<Review> currentListOfReview = movies.get(it1.next()).reviews;
 			
 			//loop through all reviews of a movie
 			for(int j=0;j<currentListOfReview.size();j++){
-				String[] currentListOfTokens =currentListOfReview.get(j).getText();
+				
+				startTime = System.nanoTime();
+				String[] tokens = token.splitTokens(currentListOfReview.get(i).getText());
+				String[] pos = tagger.assignPosToWords(tokens);
+				String[] currentListOfTokens = stemm.stem(tokens, pos);
+				tmpTime = String.valueOf(System.nanoTime() - startTime);
+				log.log(tmpTime, "stemm");
+				
 				
 				//loop through all words of a review
+				startTime = System.nanoTime();
 				for(int k=0; k<currentListOfTokens.length;k++){
 					String currentToken =  currentListOfTokens[k];
 
@@ -48,13 +74,19 @@ public class Similarity {
 					}
 					
 				}
+				tmpTime = String.valueOf(System.nanoTime() - startTime);
+				log.log(tmpTime, "loopTime");
 			}
+			i++;
+			System.out.println(i);
 			
 		}
 		
 			
 		return frequencyCountMatrix;
 	}
+	
+	
 	
 	
 	public ArrayList<ArrayList<Double>> measureSimilarity(ArrayList<ArrayList<Double>> countMatrixNormalized){
@@ -139,5 +171,7 @@ public class Similarity {
 			
 		return normalizedMatrix;
 	}
+	
+	
 
 }

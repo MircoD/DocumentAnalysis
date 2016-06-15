@@ -1,7 +1,8 @@
 package test.DocAna;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /*
  B002LBKDYE
@@ -33,117 +34,89 @@ import java.util.List;
 public class Main {
 
 	public static void main(String[] args) {
-	
+
 		// Gui gui = new Gui(tagger);
 
 		ArrayList<Review> listOfReviews = new ArrayList<Review>();
-		ArrayList<Movies> listOfMovies = new ArrayList<Movies>();
+		HashMap<String, Movies> listOfMoviesFull = new HashMap<String, Movies>();
+		HashMap<String, Movies> listOfMoviesFilterd = new HashMap<String, Movies>();
+		HashMap<String, Authors> listOfAuthors = new HashMap<String, Authors>();
 		ArrayList<ArrayList<Integer>> frequencyCountMatrix;
 		ArrayList<ArrayList<Double>> frequencyCountMatrixNormalized;
 		ArrayList<ArrayList<Double>> similarityMatrix = new ArrayList<ArrayList<Double>>();
-		String[] pos;
 
-		Logger log = new Logger();
-		POSTagger tagger = new POSTagger();
 		Reader reader = new Reader();
 		Similarity similarity = new Similarity();
-		Stemmer stemmer = new Stemmer();
+		Logger log = new Logger();
+		Tokenizer token = new Tokenizer();
+		POSTagger tagger = new POSTagger();
+		Stemmer stemm = new Stemmer();
 
-		tagger.importAndCountCorpus();
-		listOfReviews = reader
-				.readAndClear("c://docAnaTextSample.rtf");
+		long startTime = System.nanoTime();
+		String tmpTime;
+		listOfReviews = reader.readAndClear("c://docAnaTextSample.rtf");
 
-		System.out.println("reader done");
-	
-		
-		//adds the reviews to the listOfMovies
+		String tmp;
+		tmp = String.valueOf(((System.nanoTime() - startTime)/1000000000.0));
+		System.out.println("reading file:" + tmp);
+		startTime = System.nanoTime();
+
+		// adds the reviews to the listOfMovies and listOfAuthors
 		for (int i = 0; i < listOfReviews.size(); i++) {
-			pos = tagger.assignPosToWords(listOfReviews.get(i).getText());
-			Review tmpRev = listOfReviews.get(i);
-			tmpRev.setText(stemmer.stem(listOfReviews.get(i).getText(), pos));
-			tmpRev.setPos(pos);
-			listOfReviews.set(i,tmpRev);
-			
-			boolean newMovie =true;
 
-			for (int j = 0; j < listOfMovies.size() && newMovie; j++) {
-				if (listOfMovies.get(j).movieID.compareTo(listOfReviews.get(i).getProductId()) == 0) {
-					Movies tmpMovie = listOfMovies.get(j);
-					ArrayList<Review> tmp = tmpMovie.getReviews();
-					tmp.add(listOfReviews.get(i));
-					tmpMovie.setReviews(tmp);
-					listOfMovies.set(j, tmpMovie);	
-					newMovie=false;
-				}
+			if (listOfMoviesFull.containsKey(listOfReviews.get(i).getProductId())) {
+				listOfMoviesFull.get(listOfReviews.get(i).getProductId()).reviews
+						.add(listOfReviews.get(i));
+
+			} else {
+				listOfMoviesFull.put(listOfReviews.get(i).getProductId(),
+						new Movies(listOfReviews.get(i).getProductId(),
+								listOfReviews.get(i)));
 			}
-			
-			if(newMovie){				
-				listOfMovies.add(new Movies(listOfReviews.get(i).getProductId(), listOfReviews.get(i) ));
+
+			if (listOfAuthors.containsKey(listOfReviews.get(i).getUserId())) {
+				listOfAuthors.get(listOfReviews.get(i).getUserId()).reviews
+						.add(listOfReviews.get(i));
+
+			} else {
+				listOfAuthors.put(listOfReviews.get(i).getUserId(),
+						new Authors(listOfReviews.get(i).getUserId(),
+								listOfReviews.get(i)));
 			}
 		}
-				
-		System.out.println("stemmer done");
 		
+		System.out.println("create lists :" + ((System.nanoTime() - startTime)/1000000000.0));
+		startTime = System.nanoTime();
 
-		for(int i=0;i<listOfMovies.get(1).getReviews().size();i++){
-			for(int j=0;j<listOfMovies.get(1).getReviews().get(i).getText().length;j++){
-				String currentPos = listOfMovies.get(1).getReviews().get(i).getPos()[j];
-				if(currentPos.compareTo("jj") == 0 ||currentPos.compareTo("rb") == 0){
-				log.log(listOfMovies.get(1).getReviews().get(i).getText()[j], "1");
-				}
-			}	
-		}
-		
-		for(int i=0;i<listOfMovies.get(13).getReviews().size();i++){
-			for(int j=0;j<listOfMovies.get(13).getReviews().get(i).getText().length;j++){
-				String currentPos = listOfMovies.get(13).getReviews().get(i).getPos()[j];
-				if(currentPos.compareTo("jj") == 0 ||currentPos.compareTo("rb") == 0){
-				log.log(listOfMovies.get(13).getReviews().get(i).getText()[j], "13");
-				}
-			}	
-		}
-		for(int i=0;i<listOfMovies.get(14).getReviews().size();i++){
-			for(int j=0;j<listOfMovies.get(14).getReviews().get(i).getText().length;j++){
-				String currentPos = listOfMovies.get(14).getReviews().get(i).getPos()[j];
-				if(currentPos.compareTo("jj") == 0 ||currentPos.compareTo("rb") == 0){
-				log.log(listOfMovies.get(14).getReviews().get(i).getText()[j], "14");
-				}
-			}	
-		}
-		
-		for(int i=0;i<listOfMovies.get(2).getReviews().size();i++){
-			for(int j=0;j<listOfMovies.get(2).getReviews().get(i).getText().length;j++){
-				String currentPos = listOfMovies.get(2).getReviews().get(i).getPos()[j];
-				if(currentPos.compareTo("jj") == 0 ||currentPos.compareTo("rb") == 0){
-				log.log(listOfMovies.get(2).getReviews().get(i).getText()[j], "2");
-				}
-			}	
-		}
-		for(int i=0;i<listOfMovies.get(7).getReviews().size();i++){
-			for(int j=0;j<listOfMovies.get(7).getReviews().get(i).getText().length;j++){
-				String currentPos = listOfMovies.get(7).getReviews().get(i).getPos()[j];
-				if(currentPos.compareTo("jj") == 0 ||currentPos.compareTo("rb") == 0){
-				log.log(listOfMovies.get(7).getReviews().get(i).getText()[j], "7");
-				}
-			}	
-		}
-		for(int i=0;i<listOfMovies.get(18).getReviews().size();i++){
-			for(int j=0;j<listOfMovies.get(18).getReviews().get(i).getText().length;j++){
-				String currentPos = listOfMovies.get(18).getReviews().get(i).getPos()[j];
-				if(currentPos.compareTo("jj") == 0 ||currentPos.compareTo("rb") == 0){
-				log.log(listOfMovies.get(18).getReviews().get(i).getText()[j], "18");
-				}
-			}	
-		}
-		
-		frequencyCountMatrix = similarity.countTermFrequency(listOfMovies);
-		System.out.println("fq matrix done");
-		
-		frequencyCountMatrixNormalized = similarity.normalize(frequencyCountMatrix);
-		System.out.println("fq matrix normalized done");
-		
-		similarityMatrix = similarity.measureSimilarity(frequencyCountMatrixNormalized);
-		
+		Iterator it1 = listOfMoviesFull.keySet().iterator();
+		while (it1.hasNext()) {
+			String key = it1.next().toString();
+			Movies tmpMovies = listOfMoviesFull.get(key);
+			if (tmpMovies.getReviews().size() > 30) {
+				listOfMoviesFilterd.put(key, listOfMoviesFull.get(key));
+			
+			}
 
+		}
+		
+		System.out.println(listOfMoviesFilterd.size());
+		System.out.println("filter lists :" + ((System.nanoTime() - startTime)/1000000000.0));
+		
+		
+		startTime = System.nanoTime();
+		frequencyCountMatrix = similarity.countTermFrequency(listOfMoviesFilterd);		
+		System.out.println("fq matrix :" + ((System.nanoTime() - startTime)/1000000000.0));
+		
+		
+		startTime = System.nanoTime();
+		frequencyCountMatrixNormalized = similarity
+				.normalize(frequencyCountMatrix);	
+		System.out.println("normal :" + ((System.nanoTime() - startTime)/1000000000.0));
+		
+		startTime = System.nanoTime();
+		similarityMatrix = similarity
+				.measureSimilarity(frequencyCountMatrixNormalized);
+		
+		System.out.println("matrix :" + ((System.nanoTime() - startTime)/1000000000.0));
 	}
 }
