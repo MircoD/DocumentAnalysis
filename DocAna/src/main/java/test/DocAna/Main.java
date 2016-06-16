@@ -84,36 +84,36 @@ public class Main {
 			}
 		}
 		
-		listOfMoviesFilterd = filter.moviesWithMinReviews(listOfMoviesFull, 30);
-		listOfAuthorsFilterd = filter.authorsWithMinReviews(listOfAuthors, 210);
-		listOfAuthorsFilterd = stats.gatherStats(listOfAuthorsFilterd);
-		//System.out.println("create lists :" + ((System.nanoTime() - startTime)/1000000000.0));
+		listOfMoviesFilterd = filter.moviesWithMinReviews(listOfMoviesFull, 50);
+		listOfAuthorsFilterd = filter.authorsWithMinReviews(listOfAuthors, 150, 2);
+		System.out.println("create lists :" + ((System.nanoTime() - startTime)/1000000000.0));
+		startTime = System.nanoTime();
+		stats.gatherStats(listOfAuthorsFilterd);
+		System.out.println("author :" + ((System.nanoTime() - startTime)/1000000000.0));
 
-		//startTime = System.nanoTime();
-		//frequencyCountMatrix = similarity.countTermFrequency(listOfMoviesFilterd);		
-		//System.out.println("fq matrix :" + ((System.nanoTime() - startTime)/1000000000.0));
+		startTime = System.nanoTime();
+		frequencyCountMatrix = similarity.countTermFrequency(listOfMoviesFilterd);		
+		System.out.println("fq matrix :" + ((System.nanoTime() - startTime)/1000000000.0));
 		
 		
-		//startTime = System.nanoTime();
-		//frequencyCountMatrixNormalized = similarity
-		//		.normalize(frequencyCountMatrix);	
-		//System.out.println("normal :" + ((System.nanoTime() - startTime)/1000000000.0));
+		startTime = System.nanoTime();
+		frequencyCountMatrixNormalized = similarity
+				.normalize(frequencyCountMatrix);	
+		System.out.println("normal :" + ((System.nanoTime() - startTime)/1000000000.0));
 		
-		//startTime = System.nanoTime();
-		//similarityMatrix = similarity
-			//	.measureSimilarity(frequencyCountMatrixNormalized);
+		startTime = System.nanoTime();
+		similarityMatrix = similarity
+				.measureSimilarity(frequencyCountMatrixNormalized);
 		
-		//System.out.println("matrix :" + ((System.nanoTime() - startTime)/1000000000.0));
+		System.out.println("matrix :" + ((System.nanoTime() - startTime)/1000000000.0));
 	
-		for(int i=0;i<listOfAuthorsFilterd.size();i++){
-			Authors author = listOfAuthorsFilterd.get(i);
+		for(int i=0;i<similarityMatrix.size();i++){
 			
-			String tmp1= author.getAuthorID();
-			String tmp2= String.valueOf(author.getReviews().size());
-			String tmp3= String.valueOf(author.getWords()/author.getReviews().size());
-			String tmp4= String.valueOf(author.getAvgWordLength());
-			String tmp5= String.valueOf(author.getAvgfunctionWords());
-			log.log(tmp1 + " " + tmp2 + " " + tmp3 +" "+ tmp4 + " " + tmp5, "auth");
+			for(int j=0;j>similarityMatrix.get(i).size();j++){
+				if(i !=j){
+				log.log(similarityMatrix.get(i).get(j).toString() + " " + listOfMoviesFilterd.get(i).getMovieID()  +"."+listOfMoviesFilterd.get(j).getMovieID(), "movies");
+				}
+			}
 		}
 			
 		

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class AuthorStatistics {
 
-	public ArrayList<Authors> gatherStats(ArrayList<Authors> listOfAuthors) {
+	public void gatherStats(ArrayList<Authors> listOfAuthors) {
 		Tokenizer token = new Tokenizer();
 		POSTagger tagger = new POSTagger();
 		Stemmer stemm = new Stemmer();
@@ -65,10 +65,15 @@ public class AuthorStatistics {
 			author.setAvgWordLength(sumChars/sumWords);
 			author.setAvgfunctionWords(sumfunctionWords/sumWords);
 			author.setWords(sumWords);
-			listOfAuthorsWithStats.add(author);
+			String tmp1= author.getAuthorID();
+			String tmp2= String.valueOf(author.getReviews().size());
+			String tmp3= String.valueOf(author.getWords()/author.getReviews().size());
+			String tmp4= String.valueOf(author.getAvgWordLength());
+			String tmp5= String.valueOf(author.getAvgfunctionWords());
+			log.log(tmp1 + " " + tmp2 + " " + tmp3 +" "+ tmp4 + " " + tmp5, "auth");
 
 		}
-		return listOfAuthorsWithStats;
+		
 
 	}
 }

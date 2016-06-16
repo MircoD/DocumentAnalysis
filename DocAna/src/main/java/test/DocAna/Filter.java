@@ -22,13 +22,13 @@ public class Filter {
 		
 	}
 
-	public ArrayList<Authors> authorsWithMinReviews(HashMap<String,Authors> listOfAuthors, int min) {
+	public ArrayList<Authors> authorsWithMinReviews(HashMap<String,Authors> listOfAuthors, int min, int max) {
 		Iterator it1 = listOfAuthors.keySet().iterator();
 		ArrayList <Authors> filterd = new ArrayList<Authors>();
 		
 		while (it1.hasNext()) {
 			String key = it1.next().toString();
-			if (listOfAuthors.get(key).getReviews().size() >= min) {
+			if (listOfAuthors.get(key).getReviews().size() >= min ||listOfAuthors.get(key).getReviews().size() <= min ) {
 				filterd.add(listOfAuthors.get(key));
 			}
 
