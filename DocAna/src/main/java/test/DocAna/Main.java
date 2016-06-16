@@ -84,11 +84,11 @@ public class Main {
 			}
 		}
 		
-		listOfMoviesFilterd = filter.moviesWithMinReviews(listOfMoviesFull, 50);
-		listOfAuthorsFilterd = filter.authorsWithMinReviews(listOfAuthors, 150, 2);
+		listOfMoviesFilterd = filter.moviesWithMinReviews(listOfMoviesFull, 400);
+		//listOfAuthorsFilterd = filter.authorsWithMinReviews(listOfAuthors, 150, 2);
 		System.out.println("create lists :" + ((System.nanoTime() - startTime)/1000000000.0));
 		startTime = System.nanoTime();
-		stats.gatherStats(listOfAuthorsFilterd);
+		//stats.gatherStats(listOfAuthorsFilterd);
 		System.out.println("author :" + ((System.nanoTime() - startTime)/1000000000.0));
 
 		startTime = System.nanoTime();
@@ -106,10 +106,12 @@ public class Main {
 				.measureSimilarity(frequencyCountMatrixNormalized);
 		
 		System.out.println("matrix :" + ((System.nanoTime() - startTime)/1000000000.0));
+		System.out.println(similarityMatrix.size());
 	
 		for(int i=0;i<similarityMatrix.size();i++){
+			System.out.println(i);
 			
-			for(int j=0;j>similarityMatrix.get(i).size();j++){
+			for(int j=0;j<i;j++){
 				if(i !=j){
 				log.log(similarityMatrix.get(i).get(j).toString() + " " + listOfMoviesFilterd.get(i).getMovieID()  +"."+listOfMoviesFilterd.get(j).getMovieID(), "movies");
 				}

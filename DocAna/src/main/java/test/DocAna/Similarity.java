@@ -33,7 +33,6 @@ public class Similarity {
 		
 		for(int i=0;i<movies.size();i++){
 			ArrayList<Review> currentListOfReview = movies.get(i).getReviews();
-			System.out.println(currentListOfReview.size());
 			//loop through all reviews of a movie
 			for(int j=0;j<currentListOfReview.size();j++){
 				
@@ -66,7 +65,7 @@ public class Similarity {
 					
 				}
 			}
-			System.out.println(i);
+			
 			
 		}
 
