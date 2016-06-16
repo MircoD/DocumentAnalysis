@@ -2,7 +2,6 @@ package test.DocAna;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /*
  B002LBKDYE
@@ -41,6 +40,7 @@ public class Main {
 		HashMap<String, Movies> listOfMoviesFull = new HashMap<String, Movies>();
 		ArrayList<Movies> listOfMoviesFilterd = new ArrayList<Movies>();
 		HashMap<String, Authors> listOfAuthors = new HashMap<String, Authors>();
+		ArrayList<Authors> listOfAuthorsFilterd = new ArrayList<Authors>();
 		ArrayList<ArrayList<Integer>> frequencyCountMatrix;
 		ArrayList<ArrayList<Double>> frequencyCountMatrixNormalized;
 		ArrayList<ArrayList<Double>> similarityMatrix = new ArrayList<ArrayList<Double>>();
@@ -48,9 +48,8 @@ public class Main {
 		Reader reader = new Reader();
 		Similarity similarity = new Similarity();
 		Logger log = new Logger();
-		Tokenizer token = new Tokenizer();
-		POSTagger tagger = new POSTagger();
-		Stemmer stemm = new Stemmer();
+		Filter filter = new Filter();
+		AuthorStatistics stats = new AuthorStatistics();
 
 		long startTime = System.nanoTime();
 		String tmpTime;
@@ -85,51 +84,38 @@ public class Main {
 			}
 		}
 		
-		System.out.println("create lists :" + ((System.nanoTime() - startTime)/1000000000.0));
-		startTime = System.nanoTime();
+		listOfMoviesFilterd = filter.moviesWithMinReviews(listOfMoviesFull, 30);
+		listOfAuthorsFilterd = filter.authorsWithMinReviews(listOfAuthors, 210);
+		listOfAuthorsFilterd = stats.gatherStats(listOfAuthorsFilterd);
+		//System.out.println("create lists :" + ((System.nanoTime() - startTime)/1000000000.0));
 
-		Iterator it1 = listOfMoviesFull.keySet().iterator();
-		int m=0;
-		while (it1.hasNext()) {
-			String key = it1.next().toString();
-			if (listOfMoviesFull.get(key).getReviews().size() > 30) {
-				listOfMoviesFilterd.add(listOfMoviesFull.get(key));
-			}
-
-		}
-		
-		System.out.println(listOfMoviesFilterd.size());
-		System.out.println("filter lists :" + ((System.nanoTime() - startTime)/1000000000.0));
+		//startTime = System.nanoTime();
+		//frequencyCountMatrix = similarity.countTermFrequency(listOfMoviesFilterd);		
+		//System.out.println("fq matrix :" + ((System.nanoTime() - startTime)/1000000000.0));
 		
 		
-		startTime = System.nanoTime();
-		frequencyCountMatrix = similarity.countTermFrequency(listOfMoviesFilterd);		
-		System.out.println("fq matrix :" + ((System.nanoTime() - startTime)/1000000000.0));
+		//startTime = System.nanoTime();
+		//frequencyCountMatrixNormalized = similarity
+		//		.normalize(frequencyCountMatrix);	
+		//System.out.println("normal :" + ((System.nanoTime() - startTime)/1000000000.0));
 		
+		//startTime = System.nanoTime();
+		//similarityMatrix = similarity
+			//	.measureSimilarity(frequencyCountMatrixNormalized);
 		
-		startTime = System.nanoTime();
-		frequencyCountMatrixNormalized = similarity
-				.normalize(frequencyCountMatrix);	
-		System.out.println("normal :" + ((System.nanoTime() - startTime)/1000000000.0));
-		
-		startTime = System.nanoTime();
-		similarityMatrix = similarity
-				.measureSimilarity(frequencyCountMatrixNormalized);
-		
-		System.out.println("matrix :" + ((System.nanoTime() - startTime)/1000000000.0));
+		//System.out.println("matrix :" + ((System.nanoTime() - startTime)/1000000000.0));
 	
-		for(int i=0;i<similarityMatrix.size();i++){
+		for(int i=0;i<listOfAuthorsFilterd.size();i++){
+			Authors author = listOfAuthorsFilterd.get(i);
 			
-			for(int j=0;j<similarityMatrix.get(i).size();j++){
-				if(true){
-				String tmp1=similarityMatrix.get(i).get(j).toString();
-				String tmp2=listOfMoviesFilterd.get(i).getMovieID() + ".." + listOfMoviesFilterd.get(j).getMovieID();
-				
-				log.log(tmp1 + " " + tmp2, "matrix");
-				}
-			}
+			String tmp1= author.getAuthorID();
+			String tmp2= String.valueOf(author.getReviews().size());
+			String tmp3= String.valueOf(author.getWords()/author.getReviews().size());
+			String tmp4= String.valueOf(author.getAvgWordLength());
+			String tmp5= String.valueOf(author.getAvgfunctionWords());
+			log.log(tmp1 + " " + tmp2 + " " + tmp3 +" "+ tmp4 + " " + tmp5, "auth");
+		}
 			
-		}		
 		
 	}
 	
