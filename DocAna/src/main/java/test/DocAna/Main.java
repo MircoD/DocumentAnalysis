@@ -1,6 +1,7 @@
 package test.DocAna;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /*
@@ -41,6 +42,7 @@ public class Main {
 		ArrayList<Movies> listOfMoviesFilterd = new ArrayList<Movies>();
 		HashMap<String, Authors> listOfAuthors = new HashMap<String, Authors>();
 		ArrayList<Authors> listOfAuthorsFilterd = new ArrayList<Authors>();
+		
 		ArrayList<ArrayList<Integer>> frequencyCountMatrix;
 		ArrayList<ArrayList<Double>> frequencyCountMatrixNormalized;
 		ArrayList<ArrayList<Double>> similarityMatrix = new ArrayList<ArrayList<Double>>();
@@ -52,14 +54,15 @@ public class Main {
 		AuthorStatistics stats = new AuthorStatistics();
 
 		long startTime = System.nanoTime();
-		String tmpTime;
-		listOfReviews = reader.readAndClear("c://docAnaTextSample.rtf");
+		listOfReviews = reader.readReviews("c://listOfReviews.txt");
 
 		String tmp;
 		tmp = String.valueOf(((System.nanoTime() - startTime)/1000000000.0));
 		System.out.println("reading file:" + tmp);
-		startTime = System.nanoTime();
 
+	
+		
+		startTime = System.nanoTime();
 		// adds the reviews to the listOfMovies and listOfAuthors
 		for (int i = 0; i < listOfReviews.size(); i++) {
 
@@ -84,17 +87,15 @@ public class Main {
 			}
 		}
 		
-		listOfMoviesFilterd = filter.moviesWithMinReviews(listOfMoviesFull, 400);
-		//listOfAuthorsFilterd = filter.authorsWithMinReviews(listOfAuthors, 150, 2);
-		System.out.println("create lists :" + ((System.nanoTime() - startTime)/1000000000.0));
-		startTime = System.nanoTime();
+		System.out.println(listOfMoviesFull.size());
+		
+		listOfMoviesFilterd = filter.moviesWithMinReviews(listOfMoviesFull, 295);
 		//stats.gatherStats(listOfAuthorsFilterd);
-		System.out.println("author :" + ((System.nanoTime() - startTime)/1000000000.0));
+		System.out.println("author/movie list:" + ((System.nanoTime() - startTime)/1000000000.0) + " "+listOfMoviesFilterd.size());
 
 		startTime = System.nanoTime();
 		frequencyCountMatrix = similarity.countTermFrequency(listOfMoviesFilterd);		
-		System.out.println("fq matrix :" + ((System.nanoTime() - startTime)/1000000000.0));
-		
+		System.out.println("fq matrix :" + ((System.nanoTime() - startTime)/1000000000.0));	
 		
 		startTime = System.nanoTime();
 		frequencyCountMatrixNormalized = similarity
@@ -117,9 +118,13 @@ public class Main {
 				}
 			}
 		}
-			
-		
+	
+	
+	
 	}
+	
+	
+	
 	
 	
 }

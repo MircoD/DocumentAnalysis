@@ -70,7 +70,7 @@ public class AuthorStatistics {
 			String tmp3= String.valueOf(author.getWords()/author.getReviews().size());
 			String tmp4= String.valueOf(author.getAvgWordLength());
 			String tmp5= String.valueOf(author.getAvgfunctionWords());
-			log.log(tmp1 + " " + tmp2 + " " + tmp3 +" "+ tmp4 + " " + tmp5, "auth");
+			//log.log(tmp1 + " " + tmp2 + " " + tmp3 +" "+ tmp4 + " " + tmp5, "auth");
 
 		}
 		

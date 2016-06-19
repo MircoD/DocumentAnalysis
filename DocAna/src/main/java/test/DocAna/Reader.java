@@ -3,6 +3,7 @@ package test.DocAna;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -17,8 +18,7 @@ import java.util.Scanner;
 public class Reader {
 
 	public ArrayList<Review> readAndClear(String filePath) {
-		
-		Tokenizer token = new Tokenizer();
+
 		ArrayList<Review> listOfReviews = new ArrayList<Review>();
 		String prod = new String();
 		String user = new String();
@@ -29,7 +29,6 @@ public class Reader {
 		long time = 0;
 		String summary = new String();
 		String text = new String();
-
 
 		try {
 			Scanner scanner = new Scanner(new File(filePath));
@@ -101,10 +100,71 @@ public class Reader {
 				}
 
 				scanner.nextLine();
-			
+
+				if (prod.compareTo("B000O76T7M") == 0
+						|| prod.compareTo("B00005JMZK") == 0
+						|| prod.compareTo("B001FB55HQ") == 0
+						|| prod.compareTo("B0007Y08II") == 0
+						|| prod.compareTo("B001G7Q0Z0") == 0
+						|| prod.compareTo("B0032LO8DE") == 0
+						|| prod.compareTo("B000ZLFALS") == 0
+						|| prod.compareTo("B000067JG4") == 0
+						|| prod.compareTo("B000J0XJC2") == 0
+						|| prod.compareTo("B0028OA3EO") == 0
+						|| prod.compareTo("7883704540") == 0
+						|| prod.compareTo("B0068FZ05Q") == 0
+						|| prod.compareTo("B000071ZZI") == 0
+						|| prod.compareTo("B002ZHKZCY") == 0) {
+
+				} else {
+					listOfReviews.add(new Review(prod, user, profil,
+							help_denom, help_enum, score, time, summary, text));
+				}
+			}
+
+			scanner.close();
+
+		} catch (FileNotFoundException e) {
+			System.out.println("File Not Found");
+		}
+
+		return listOfReviews;
+
+	}
+
+	public ArrayList<Review> readReviews(String filePath) {
+
+		ArrayList<Review> listOfReviews = new ArrayList<Review>();
+		String prod = new String();
+		String user = new String();
+		String profil = new String();
+		int help_enum = 0;
+		int help_denom = 0;
+		int score = 0;
+		long time = 0;
+		String summary = new String();
+		String text = new String();
+
+		long startTime = System.nanoTime();
+
+		try {
+			Scanner scanner = new Scanner(new File(filePath));
+
+			while (scanner.hasNextLine()) {
+				prod = scanner.nextLine();
+				user = scanner.nextLine();
+				profil = scanner.nextLine();
+				help_enum = Integer.parseInt(scanner.nextLine());
+				help_denom = Integer.parseInt(scanner.nextLine());
+				score = Integer.parseInt(scanner.nextLine());
+				time = Long.parseLong(scanner.nextLine());
+				summary = scanner.nextLine();
+				text = scanner.nextLine();
+				scanner.nextLine();
+
+					listOfReviews.add(new Review(prod, user, profil, help_enum,
+							help_denom, score, time, summary, text));
 				
-				listOfReviews.add(new Review(prod, user, profil, help_denom,
-						help_enum, score, time, summary, text));
 
 			}
 
@@ -113,7 +173,6 @@ public class Reader {
 		} catch (FileNotFoundException e) {
 			System.out.println("File Not Found");
 		}
-		
 		return listOfReviews;
 
 	}

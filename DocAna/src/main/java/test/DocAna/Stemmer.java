@@ -33,6 +33,7 @@ public class Stemmer {
 	public String[] stem(String[] tokens, String[] pos) {
 
 		IDictionary dict = null;
+		String [] stemmd = new String[tokens.length];
 
 		try {
 			// construct the URL to the Wordnet dictionary directory
@@ -47,19 +48,21 @@ public class Stemmer {
 			return tokens;
 		}
 
+		
+		
 		for (int i = 0; i < tokens.length; i++) {
 
 			// a few exceptions that have frequent occurrences and are irregular
 			if (tokens[i].matches("better|best")) {
-				tokens[i] = "good";
+				stemmd [i] = "good";
 			} else if (tokens[i].matches("worse|worst")) {
-				tokens[i] = "bad";
+				stemmd[i] = "bad";
 			} else if (tokens[i].matches("does|did")) {
-				tokens[i] = "do";
+				stemmd[i] = "do";
 			} else if (tokens[i].matches("has|had")) {
-				tokens[i] = "have";
+				stemmd[i] = "have";
 			} else if (tokens[i].matches("are|am|is|were|was")) {
-				tokens[i] = "be";
+				stemmd[i] = "be";
 				// to avoid nullpointers when checking the last two chars of a
 				// string
 			} else if (tokens[i].length() > 2) {
@@ -79,21 +82,20 @@ public class Stemmer {
 						tmpie = tmp.substring(0, tokens[i].length() - 2);
 						tmpie = tmp + "y";
 					}
-
-					// check whether tmp or tmpie exists as a word
-					if (existsNoun(dict, tmp) || existsVerb(dict, tmp)) {
-						tokens[i] = tmp;
-
-					} else if (existsNoun(dict, tmpie)
+						
+					if (existsNoun(dict, tmpie)
 							|| existsVerb(dict, tmpie)) {
-						tokens[i] = tmpie;
+						stemmd [i] = tmpie;
 
+					} else {
+						stemmd [i]=tmp;
 					}
 				}
 
 				// Suffix -ness; noun from adjective/adverb
 				if (tokens[i].matches("[A-Za-z\\-]+ness")) {
 					String tmp = tokens[i].replaceAll("ness(?=\\s+|$)", "");
+					String tmpe = tmp + "e";
 
 					// cases like manliness -> manly
 					if (tmp.matches("[A-Za-z\\-]+i")) {
@@ -101,19 +103,21 @@ public class Stemmer {
 					}
 
 					// check whether tmp exists as a word
-					if (existsAdjective(dict, tmp) || existsAdverb(dict, tmp)) {
-						tokens[i] = tmp;
+					if (existsAdjective(dict, tmpe) || existsAdverb(dict, tmpe)) {
+						stemmd[i] = tmpe;
 
+					} else {
+						stemmd[i]=tmp;
 					}
 				}
 
 				// Suffix -man/-men;
 				if (tokens[i].endsWith("men")) {
 					if (tokens[i].length() != 3) {
-						tokens[i] = tokens[i].substring(0,
+						stemmd[i] = tokens[i].substring(0,
 								tokens[i].length() - 3) + "man";
 					} else {
-						tokens[i] = "man";
+						stemmd[i] = "man";
 					}
 				}
 
@@ -142,13 +146,10 @@ public class Stemmer {
 
 					if (existsAdverb(dict, tmpe) || existsAdjective(dict, tmpe)
 							|| existsVerb(dict, tmpe)) {
-						tokens[i] = tmpe;
+						stemmd[i] = tmpe;
 
-					} else if (existsAdverb(dict, tmp)
-							|| existsAdjective(dict, tmp)
-							|| existsVerb(dict, tmp)) {
-						tokens[i] = tmp;
-
+					} else {
+						stemmd[i]=tmp;
 					}
 				}
 
@@ -162,11 +163,7 @@ public class Stemmer {
 						tmp = tmp.substring(0, tmp.length() - 1);
 					}
 
-					// check whether tmp exists as a word
-					if (existsAdjective(dict, tmp) || existsNoun(dict, tmp)) {
-						tokens[i] = tmp;
-
-					}
+					stemmd[i]=tmp;
 				}
 
 				// Suffix -ly; adverb from adjective, adverb from noun
@@ -177,13 +174,8 @@ public class Stemmer {
 					if (tmp.matches("[A-Za-z\\-]+i")) {
 						tmp = tmp.replaceAll("i(?=\\s+|$)", "y");
 					}
-
-					// check whether tmp exists as a word
-					if (existsAdjective(dict, tmp) || existsNoun(dict, tmp)) {
-						tokens[i] = tmp;
-
-					}
-
+					
+					stemmd[i]=tmp;
 				}
 
 				// Suffix -ed; past tense, adjective from noun
@@ -191,18 +183,18 @@ public class Stemmer {
 						&& (pos[i].compareTo("vbd") == 0 
 						|| pos[i].compareTo("vbn") == 0 
 						|| pos[i].compareTo("jj") == 0)) {
+					
 					String tmp = tokens[i].substring(0, tokens[i].length() - 2);
-
+					String tmpe = tmp + "e";
 					if (tmp.matches("[A-Za-z\\-]+i")) {
 						tmp = tmp.replaceAll("i(?=\\s+|$)", "y");
 					}
 
 					// check whether tmp exists as a word
-					if (existsNoun(dict, tmp) || existsVerb(dict, tmp)) {
-						tokens[i] = tmp;
-
-					} else if(existsNoun(dict, tmp+"e") || existsVerb(dict, tmp+"e")){
-						tokens[i] = tmp+"e";
+					if(existsNoun(dict, tmpe) || existsVerb(dict, tmpe)){
+						stemmd[i] = tmpe;
+					} else {
+						stemmd[i]=tmp;
 					}
 				}
 
@@ -218,13 +210,12 @@ public class Stemmer {
 					}
 
 					// check whether tmp or tmpe exists as a word
-					if (existsAdjective(dict, tmp) || existsVerb(dict, tmp)) {
-						tokens[i] = tmp;
-
-					} else if (existsAdjective(dict, tmpe)
+					if (existsAdjective(dict, tmpe)
 							|| existsVerb(dict, tmpe)) {
-						tokens[i] = tmpe;
+						stemmd[i] = tmpe;
 
+					} else {
+						stemmd[i]=tmp;
 					}
 				}
 
@@ -244,12 +235,11 @@ public class Stemmer {
 					String tmpe = tmp + "e";
 
 					// check whether tmp exists as a word
-					if (existsVerb(dict, tmp)) {
-						tokens[i] = tmp;
+					if (existsVerb(dict, tmpe)) {
+						stemmd[i] = tmpe;
 
-					} else if (existsVerb(dict, tmpe)) {
-						tokens[i] = tmpe;
-
+					} else {
+						stemmd[i]=tmp;
 					}
 				}
 
@@ -265,13 +255,9 @@ public class Stemmer {
 							.charAt(tmp.length() - 2)) {
 						tmp = tmp.substring(0, tmp.length() - 1);
 					}
-
-					// check whether tmp exists as a word
-					if (existsAdjective(dict, tmp) || existsAdverb(dict, tmp)) {
-						tokens[i] = tmp;
-
-					}
+					stemmd[i]=tmp;	
 				}
+				
 
 			}
 		}

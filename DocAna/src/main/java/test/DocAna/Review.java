@@ -34,9 +34,8 @@ public class Review {
 		this.time = time;
 		this.summary = summary;
 		this.text = text;
-		this.pos = new String[0];
-	}
-	
+}
+
 
 	public long getTime() {
 		return time;
