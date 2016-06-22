@@ -33,6 +33,14 @@ public class Tokenizer {
 
 		return sentences;
 	}
+	
+	public String[] splitSentencesAlt(String text){
+		
+		text.replace("Mr.", "Mr").replace("Mrs.", "Mrs").replace("Jr.", "Jr").replace("Prof.", "Prof").replace("Dr.", "Dr");
+		return text.split("[?!.]\\s[A-Z]");
+	}
+	
+	
 
 	/**
 	 * @param String
@@ -60,7 +68,7 @@ public class Tokenizer {
 				.replace("musn't", "must not").replace("shan't", "shall not")
 				.replace("shouldn't", "should not").replace("'ll", " will")
 				.replace("wouldn't", "would not").replace("'d", " would").replace("there's", "there is")
-				.replace("let's", "let us").replace("'s", "")
+				.replace("let's", "let us").replace("what's","what is").replace("that's","that is").replace("'s", "")
 				.replaceAll("\\W", " ").replaceAll("\\s+", " ");
 
 		return text.split("\\s");

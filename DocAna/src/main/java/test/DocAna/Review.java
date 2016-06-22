@@ -7,15 +7,13 @@ import java.util.ArrayList;
  * 
  */
 
-
 public class Review {
-	
-	
+
 	private String productId;
 	private String userId;
 	private String profileName;
-	private int helpfulness_denom;		//helpfulness denominator
-	private int helpfulness_enum;		//helpfulness enumerator
+	private int helpfulness_denom; // helpfulness denominator
+	private int helpfulness_enum; // helpfulness enumerator
 	private int score;
 	private long time;
 	private String summary;
@@ -23,8 +21,8 @@ public class Review {
 	private String[] pos;
 
 	public Review(String productId, String userId, String profileName,
-			int helpfulness_denom,int helpfulness_enum,int score, long time, String summary,
-			String text) {
+			int helpfulness_denom, int helpfulness_enum, int score, long time,
+			String summary, String text) {
 		this.productId = productId;
 		this.userId = userId;
 		this.profileName = profileName;
@@ -34,18 +32,19 @@ public class Review {
 		this.time = time;
 		this.summary = summary;
 		this.text = text;
-}
+	}
 
-
+	public Review(String text){
+		this.text = text;
+	}
+	
 	public long getTime() {
 		return time;
 	}
 
-
 	public void setTime(long time) {
 		this.time = time;
 	}
-
 
 	public String getProductId() {
 		return productId;
@@ -103,25 +102,20 @@ public class Review {
 		this.summary = summary;
 	}
 
-
 	public String getText() {
 		return text;
 	}
-
 
 	public void setText(String text) {
 		this.text = text;
 	}
 
-
 	public String[] getPos() {
 		return pos;
 	}
 
-
 	public void setPos(String[] pos) {
 		this.pos = pos;
 	}
-
 
 }

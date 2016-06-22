@@ -187,4 +187,17 @@ public class Reader {
 		return str.substring(1, str.length());
 	}
 
+	public String clean(String text){
+		return text.replace("<a href=\"", "").replace("</a>", "")
+				.replace("\">", " ").replace("<br />", "")
+				.replace("<span class=\"tiny\"", "")
+				.replace("<span class=\"tiny", "")
+				.replace("</span>", "").replace("<p>", "")
+				.replace("&lt;", "").replace("/i&gt;", "")
+				.replace("SPOILER>>;", "").replace("shrug>", "")
+				.replace("sigh>>", "").replace("href=\"", "")
+				.replace("&#60", "").replace("&#34", "")
+				.replace("&quot;", "");
+	}
+	
 }

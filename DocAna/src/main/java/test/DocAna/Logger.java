@@ -10,7 +10,7 @@ import java.io.PrintWriter;
  * 
  */
 public class Logger {
-    public static void log(String message, String name) {
+    public void log(String message, String name) {
         try {
             PrintWriter out = new PrintWriter(new FileWriter(name + ".txt", true), true);
             out.write(message + System.lineSeparator());

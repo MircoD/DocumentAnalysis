@@ -35,14 +35,13 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		// Gui gui = new Gui(tagger);
 
 		ArrayList<Review> listOfReviews = new ArrayList<Review>();
 		HashMap<String, Movies> listOfMoviesFull = new HashMap<String, Movies>();
 		ArrayList<Movies> listOfMoviesFilterd = new ArrayList<Movies>();
 		HashMap<String, Authors> listOfAuthors = new HashMap<String, Authors>();
 		ArrayList<Authors> listOfAuthorsFilterd = new ArrayList<Authors>();
-		
+
 		ArrayList<ArrayList<Integer>> frequencyCountMatrix;
 		ArrayList<ArrayList<Double>> frequencyCountMatrixNormalized;
 		ArrayList<ArrayList<Double>> similarityMatrix = new ArrayList<ArrayList<Double>>();
@@ -51,22 +50,23 @@ public class Main {
 		Similarity similarity = new Similarity();
 		Logger log = new Logger();
 		Filter filter = new Filter();
+		POSTagger tag = new POSTagger();
 		AuthorStatistics stats = new AuthorStatistics();
 
 		long startTime = System.nanoTime();
 		listOfReviews = reader.readReviews("c://listOfReviews.txt");
+		tag.importAndCountCorpus();
 
 		String tmp;
-		tmp = String.valueOf(((System.nanoTime() - startTime)/1000000000.0));
+		tmp = String.valueOf(((System.nanoTime() - startTime) / 1000000000.0));
 		System.out.println("reading file:" + tmp);
 
-	
-		
 		startTime = System.nanoTime();
 		// adds the reviews to the listOfMovies and listOfAuthors
 		for (int i = 0; i < listOfReviews.size(); i++) {
 
-			if (listOfMoviesFull.containsKey(listOfReviews.get(i).getProductId())) {
+			if (listOfMoviesFull.containsKey(listOfReviews.get(i)
+					.getProductId())) {
 				listOfMoviesFull.get(listOfReviews.get(i).getProductId()).reviews
 						.add(listOfReviews.get(i));
 
@@ -86,45 +86,21 @@ public class Main {
 								listOfReviews.get(i)));
 			}
 		}
-		
-		System.out.println(listOfMoviesFull.size());
-		
-		listOfMoviesFilterd = filter.moviesWithMinReviews(listOfMoviesFull, 295);
-		//stats.gatherStats(listOfAuthorsFilterd);
-		System.out.println("author/movie list:" + ((System.nanoTime() - startTime)/1000000000.0) + " "+listOfMoviesFilterd.size());
 
-		startTime = System.nanoTime();
-		frequencyCountMatrix = similarity.countTermFrequency(listOfMoviesFilterd);		
-		System.out.println("fq matrix :" + ((System.nanoTime() - startTime)/1000000000.0));	
+
+		System.out.println(listOfMoviesFull.size());
+
+		listOfMoviesFilterd = filter.moviesWithMinReviews(listOfMoviesFull, 0,
+				900);
+
+		System.out.println("author/movie list:"
+				+ ((System.nanoTime() - startTime) / 1000000000.0) + " "
+				+ listOfMoviesFilterd.size());
 		
-		startTime = System.nanoTime();
-		frequencyCountMatrixNormalized = similarity
-				.normalize(frequencyCountMatrix);	
-		System.out.println("normal :" + ((System.nanoTime() - startTime)/1000000000.0));
-		
-		startTime = System.nanoTime();
-		similarityMatrix = similarity
-				.measureSimilarity(frequencyCountMatrixNormalized);
-		
-		System.out.println("matrix :" + ((System.nanoTime() - startTime)/1000000000.0));
-		System.out.println(similarityMatrix.size());
-	
-		for(int i=0;i<similarityMatrix.size();i++){
-			System.out.println(i);
-			
-			for(int j=0;j<i;j++){
-				if(i !=j){
-				log.log(similarityMatrix.get(i).get(j).toString() + " " + listOfMoviesFilterd.get(i).getMovieID()  +"."+listOfMoviesFilterd.get(j).getMovieID(), "movies");
-				}
-			}
+		for (int i = 0; i < listOfMoviesFilterd.size(); i++) {
+			stats.gatherStats(listOfMoviesFilterd.get(i).getReviews(), tag, listOfMoviesFilterd.get(i).getMovieID());
+
 		}
-	
-	
-	
+
 	}
-	
-	
-	
-	
-	
 }

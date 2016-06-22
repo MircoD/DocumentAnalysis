@@ -16,14 +16,12 @@ public class Similarity {
 
 	
 	//counts TermFrequency
-	public ArrayList<ArrayList<Integer>> countTermFrequency(ArrayList<Movies> movies){
+	public ArrayList<ArrayList<Integer>> countTermFrequency(ArrayList<Movies> movies,POSTagger tagger){
 		Tokenizer token = new Tokenizer();
-		POSTagger tagger = new POSTagger();
 		Stemmer stemm = new Stemmer();
 		Logger log = new Logger();
 		
 		
-		tagger.importAndCountCorpus();
 		frequencyCountMatrix = new ArrayList<ArrayList<Integer>>();
 		words = new HashMap<String, Integer>();
 		
@@ -173,8 +171,99 @@ public class Similarity {
 		    	normalizedMatrix.set(i, tmpCounts);
 		    }
 		}
+		
 			
 		return normalizedMatrix;
 	}
 
+	public ArrayList<ArrayList<Integer>> countTermFrequency(ArrayList<Movies> movies,POSTagger tagger, String po){
+		Tokenizer token = new Tokenizer();
+		Stemmer stemm = new Stemmer();
+		Logger log = new Logger();
+		
+		
+		frequencyCountMatrix = new ArrayList<ArrayList<Integer>>();
+		words = new HashMap<String, Integer>();
+		
+		for(int i=0;i<movies.size();i++){
+			frequencyCountMatrix.add(new ArrayList<Integer>());
+		}
+		
+		for(int i=0;i<movies.size();i++){
+			ArrayList<Review> currentListOfReview = movies.get(i).getReviews();
+			//loop through all reviews of a movie
+			for(int j=0;j<currentListOfReview.size();j++){
+				
+
+				String[] tokens = token.splitTokens(currentListOfReview.get(j).getText());
+				String[] pos = tagger.assignPosToWords(tokens);
+				String[] currentListOfTokens = stemm.stem(tokens, pos);
+
+				
+				
+				//loop through all words of a review
+				for(int k=0; k<currentListOfTokens.length;k++){
+					String currentToken =  currentListOfTokens[k];
+
+					if(po.compareTo(pos[k])==0){
+				
+					if(words.containsKey(currentToken)){
+						int index= words.get(currentToken);
+						ArrayList<Integer> tmp = frequencyCountMatrix.get(i);
+						tmp.set(index, tmp.get(index)+1); 
+						frequencyCountMatrix.set(i, tmp);
+					}
+					else {
+						for(int l =0; l < movies.size();l++){
+							frequencyCountMatrix.get(l).add(0);
+						}
+						
+						ArrayList<Integer> tmp = frequencyCountMatrix.get(i);
+						tmp.set(tmp.size()-1, 1);
+						words.put(currentToken, frequencyCountMatrix.get(0).size()-1);	
+					}
+					
+					
+				}
+					
+				}
+			}
+			
+			
+		}
+		
+			
+		return frequencyCountMatrix;
+	}
+	
+	public ArrayList<ArrayList<Double>> normalise(ArrayList<ArrayList<Integer>> frequencyCountMatrix){
+		ArrayList<Double> max = new ArrayList<Double>();
+		ArrayList<ArrayList<Double>> normalise = new ArrayList<ArrayList<Double>>();
+		double sum=0;
+		
+		for(int i=0;i<frequencyCountMatrix.get(0).size();i++){
+			for(int j=0;j<frequencyCountMatrix.size();j++){
+				sum = (double) frequencyCountMatrix.get(j).get(i) + sum;
+				
+			}
+			
+			max.add(i, sum);
+		}
+		
+		
+		for(int i=0;i<frequencyCountMatrix.size();i++){
+			ArrayList<Double> tmp = new ArrayList<Double>();
+			for(int j=0; j<frequencyCountMatrix.get(i).size();j++){
+				tmp.add(j, ((double) frequencyCountMatrix.get(i).get(j)) /max.get(j));
+				
+			}
+			normalise.add(i, tmp);
+			
+		}
+	
+		
+		return normalise;
+	}
+	
+	
 }
