@@ -8,7 +8,6 @@ public class Stats {
 	double avgWordLength;
 	double avgWordsPerReview;
 	double avgfunctionWords;
-	ArrayList<Double> tfidf;
 
 	public Stats(double avgSentenceLength, double avgCapitalLetter,
 			double avgWordLength, double avgWordsPerReview,
@@ -53,13 +52,14 @@ public class Stats {
 		this.avgfunctionWords = avgfunctionWords;
 	}
 
-	public ArrayList<Double> getTfidf() {
-		return tfidf;
+	public double getAvgWordsPerReview() {
+		return avgWordsPerReview;
 	}
 
-	public void setTfidf(ArrayList<Double> tfidf) {
-		this.tfidf = tfidf;
+	public void setAvgWordsPerReview(double avgWordsPerReview) {
+		this.avgWordsPerReview = avgWordsPerReview;
 	}
+
 
 	
 }

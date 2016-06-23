@@ -9,7 +9,7 @@ public class AuthorStatistics {
 	
 
 
-	public Stats gatherStats(ArrayList<Review> listOfReviews, POSTagger tagger, String a) {
+	public Stats gatherStats(ArrayList<Review> listOfReviews, POSTagger tagger) {
 		Logger log = new Logger();
 		String[] tokens;
 		String[] pos;
@@ -81,8 +81,7 @@ public class AuthorStatistics {
 		double avgWordsPerReview = sumWords / listOfReviews.size();
 		double avgfunctionWords = sumfunctionWords / sumWords;
 
-		
-		log.log(avgSentenceLength +" " + avgCapitalLetter+" " +avgWordLength +" " +avgWordsPerReview +" " + avgfunctionWords + " " + a, "stats");
+
 		return new Stats(avgSentenceLength, avgCapitalLetter, avgWordLength,
 				avgWordsPerReview, avgfunctionWords);
 	}
