@@ -10,6 +10,8 @@ public class Sentiment {
 	private List<Double> posWeights;
 	private List<Double> negWeights;
 	private double butWeight;
+	private double positiveCount = 0;
+	private double negativeCount = 0;
 	
 	public Sentiment(List<String> positive, List<String> negative,
 			List<Double> posWeights, List<Double> negWeights, double butWeight) {
@@ -59,24 +61,21 @@ public class Sentiment {
 	private boolean getReviewSentiment(Review review, POSTagger tagger) {
 		Tokenizer token = new Tokenizer();
 		Stemmer stem = new Stemmer();
-		int positiveCount = 0;
-		int negativeCount = 0;
 		
 		String[] tokens = token.splitTokens(review.getText());
 		String[] pos = tagger.assignPosToWords(tokens);
 		String[] stemmed = stem.stem(tokens, pos);
 		for (String word : stemmed) {
-			if (positive.contains(word)) {
-				positiveCount++;
-			}
-			if (negative.contains(word)) {
-				negativeCount++;
-			}
+			adjustWeights(word);
 		}
 		
 		if (positiveCount > negativeCount) {
+			positiveCount = 0;
+			negativeCount = 0;
 			return true;
 		} else {
+			positiveCount = 0;
+			negativeCount = 0;
 			return false;
 		}
 		
@@ -87,74 +86,71 @@ public class Sentiment {
 	private boolean getMovieSentiment(Movies movie, POSTagger tagger) {
 		Tokenizer token = new Tokenizer();
 		Stemmer stem = new Stemmer();
-		int positiveCount = 0;
-		int negativeCount = 0;
 		
 		for (Review review : movie.getReviews()) {
 			String[] tokens = token.splitTokens(review.getText());
 			String[] pos = tagger.assignPosToWords(tokens);
 			String[] stemmed = stem.stem(tokens, pos);
 			for (String word : stemmed) {
-				if (positive.contains(word)) {
-					positiveCount++;
-				}
-				if (negative.contains(word)) {
-					negativeCount++;
-				}
+				adjustWeights(word);
 			}
 		}
 		
 		if (positiveCount > negativeCount) {
+			positiveCount = 0;
+			negativeCount = 0;
 			return true;
 		} else {
+			positiveCount = 0;
+			negativeCount = 0;
 			return false;
 		}
 	}
 	
 	
 	private boolean getReviewSentimentImproved(Review review, POSTagger tagger) {
+		Tokenizer token = new Tokenizer();
+		Stemmer stem = new Stemmer();
 		
-		// TODO
-		return false;
+		String[] tokens = token.splitTokens(review.getText());
+		String[] pos = tagger.assignPosToWords(tokens);
+		String[] stemmed = stem.stem(tokens, pos);
+		for (int i = 0; i < stemmed.length; i++) {
+			adjustWeightsImproved(stemmed, stemmed[i], i);
+		}
+		
+		if (positiveCount > negativeCount) {
+			positiveCount = 0;
+			negativeCount = 0;
+			return true;
+		} else {
+			positiveCount = 0;
+			negativeCount = 0;
+			return false;
+		}
 	}
 
 
 	private boolean getMovieSentimentImproved(Movies movie, POSTagger tagger) {
 		Tokenizer token = new Tokenizer();
 		Stemmer stem = new Stemmer();
-		int positiveCount = 0;
-		int negativeCount = 0;
 		
 		for (Review review : movie.getReviews()) {
 			String[] tokens = token.splitTokens(review.getText());
 			String[] pos = tagger.assignPosToWords(tokens);
 			String[] stemmed = stem.stem(tokens, pos);
 			for (int i = 0; i < stemmed.length; i++) {
-				int posIndex = positive.indexOf(stemmed[i]);
-				int negIndex = negative.indexOf(stemmed[i]);
-				boolean negation = isNegated(stemmed, i);
-				//boolean but = hasBut(stemmed, i);
-				
-				if (posIndex > -1) {
-					if (negation) {
-						negativeCount += posWeights.get(posIndex);
-					} else {
-						positiveCount += posWeights.get(posIndex);
-					}
-				}
-				if (negIndex > -1) {
-					if (negation) {
-						positiveCount += negWeights.get(negIndex);
-					} else {
-						negativeCount += negWeights.get(negIndex);
-					}
-				}
+				adjustWeightsImproved(stemmed, stemmed[i], i);
 			}
 		}
 		
 		if (positiveCount > negativeCount) {
+			positiveCount = 0;
+			negativeCount = 0;
 			return true;
 		} else {
+			positiveCount = 0;
+			negativeCount = 0;
 			return false;
 		}
 	}
@@ -185,5 +181,38 @@ public class Sentiment {
 			}
 		}
 		return false;
+	}
+	
+	
+	private void adjustWeights(String word) {
+		if (positive.contains(word)) {
+			positiveCount++;
+		}
+		if (negative.contains(word)) {
+			negativeCount++;
+		}
+	}
+	
+	
+	private void adjustWeightsImproved(String[] stemmed, String word, int index) {
+		int posIndex = positive.indexOf(word);
+		int negIndex = negative.indexOf(word);
+		boolean negation = isNegated(stemmed, index);
+		//boolean but = hasBut(stemmed, i);
+		
+		if (posIndex > -1) {
+			if (negation) {
+				negativeCount += posWeights.get(posIndex);
+			} else {
+				positiveCount += posWeights.get(posIndex);
+			}
+		}
+		if (negIndex > -1) {
+			if (negation) {
+				positiveCount += negWeights.get(negIndex);
+			} else {
+				negativeCount += negWeights.get(negIndex);
+			}
+		}
 	}
 }
