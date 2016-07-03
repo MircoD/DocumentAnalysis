@@ -101,25 +101,9 @@ public class Reader {
 
 				scanner.nextLine();
 
-				if (prod.compareTo("B000O76T7M") == 0
-						|| prod.compareTo("B00005JMZK") == 0
-						|| prod.compareTo("B001FB55HQ") == 0
-						|| prod.compareTo("B0007Y08II") == 0
-						|| prod.compareTo("B001G7Q0Z0") == 0
-						|| prod.compareTo("B0032LO8DE") == 0
-						|| prod.compareTo("B000ZLFALS") == 0
-						|| prod.compareTo("B000067JG4") == 0
-						|| prod.compareTo("B000J0XJC2") == 0
-						|| prod.compareTo("B0028OA3EO") == 0
-						|| prod.compareTo("7883704540") == 0
-						|| prod.compareTo("B0068FZ05Q") == 0
-						|| prod.compareTo("B000071ZZI") == 0
-						|| prod.compareTo("B002ZHKZCY") == 0) {
-
-				} else {
 					listOfReviews.add(new Review(prod, user, profil,
 							help_denom, help_enum, score, time, summary, text));
-				}
+				
 			}
 
 			scanner.close();
@@ -162,9 +146,22 @@ public class Reader {
 				text = scanner.nextLine();
 				scanner.nextLine();
 
-					listOfReviews.add(new Review(prod, user, profil, help_enum,
-							help_denom, score, time, summary, text));
-				
+				if (prod.compareTo("6304341849") == 0
+						|| prod.compareTo("B00005M1Y0") == 0
+						|| prod.compareTo("B00004CUYA") == 0
+						|| prod.compareTo("B00007JXWX") == 0
+						|| prod.compareTo("B00022VM5I") == 0
+						|| prod.compareTo("B004ZJZQFG") == 0
+						|| prod.compareTo("B008G4NDRO") == 0
+						|| prod.compareTo("B004I4KKZO") == 0
+						|| prod.compareTo("B000TXPXC8") == 0
+						|| prod.compareTo("B000XS8RPY") == 0) {
+					listOfReviews.add(new Review(prod, user, profil,
+							help_denom, help_enum, score, time, summary, text));
+
+				} else {
+
+				}
 
 			}
 
