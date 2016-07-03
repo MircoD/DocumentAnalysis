@@ -9,12 +9,15 @@ public class Sentiment {
 	private List<String> negative;
 	private List<Double> posWeights;
 	private List<Double> negWeights;
+	private double butWeight;
 	
-	public Sentiment(List<String> positive, List<String> negative, List<Double> posWeights, List<Double> negWeights) {
+	public Sentiment(List<String> positive, List<String> negative,
+			List<Double> posWeights, List<Double> negWeights, double butWeight) {
 		this.positive = positive;
 		this.negative = negative;
 		this.posWeights = posWeights;
 		this.negWeights = negWeights;
+		this.butWeight = butWeight;
 	}
 	
 	public List<Boolean> getMoviesSentiment(List<Movies> movies, POSTagger tagger) {
