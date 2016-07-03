@@ -20,26 +20,34 @@ public class Sentiment {
 		this.butWeight = butWeight;
 	}
 	
-	public List<Boolean> getMoviesSentiment(List<Movies> movies, POSTagger tagger) {
+	public List<Boolean> getMoviesSentiment(List<Movies> movies, POSTagger tagger, boolean improved) {
 		
 		List<Boolean> result = new ArrayList<Boolean>();
 		
 		for (Movies movie : movies) {
-			result.add(getMovieSentiment(movie, tagger));
+			if (improved) {
+				result.add(getMovieSentimentImproved(movie, tagger));
+			} else {
+				result.add(getMovieSentiment(movie, tagger));
+			}
 		}
 		
 		return result;
 	}
 	
 
-	public ArrayList<ArrayList<Boolean>> getReviewsSentiment(List<Movies> movies, POSTagger tagger) {
+	public ArrayList<ArrayList<Boolean>> getReviewsSentiment(List<Movies> movies, POSTagger tagger, boolean improved) {
 		
 		ArrayList<ArrayList<Boolean>> result = new ArrayList<ArrayList<Boolean>>();
 		
 		for (Movies movie : movies) {
 			ArrayList<Boolean> movieResult = new ArrayList<Boolean>();
 			for (Review review : movie.getReviews()) {
-				movieResult.add(getReviewSentiment(review, tagger));
+				if (improved) {
+					movieResult.add(getReviewSentimentImproved(review, tagger));
+				} else {
+					movieResult.add(getReviewSentiment(review, tagger));
+				}
 			}
 			result.add(movieResult);
 		}
@@ -103,6 +111,13 @@ public class Sentiment {
 		}
 	}
 	
+	
+	private boolean getReviewSentimentImproved(Review review, POSTagger tagger) {
+		
+		// TODO
+		return false;
+	}
+
 
 	private boolean getMovieSentimentImproved(Movies movie, POSTagger tagger) {
 		Tokenizer token = new Tokenizer();
@@ -115,21 +130,23 @@ public class Sentiment {
 			String[] pos = tagger.assignPosToWords(tokens);
 			String[] stemmed = stem.stem(tokens, pos);
 			for (int i = 0; i < stemmed.length; i++) {
+				int posIndex = positive.indexOf(stemmed[i]);
+				int negIndex = negative.indexOf(stemmed[i]);
 				boolean negation = isNegated(stemmed, i);
-				boolean but = hasBut(stemmed, i);
+				//boolean but = hasBut(stemmed, i);
 				
-				if (positive.contains(stemmed[i])) {
+				if (posIndex > -1) {
 					if (negation) {
-						negativeCount++;
+						negativeCount += posWeights.get(posIndex);
 					} else {
-						positiveCount++;
+						positiveCount += posWeights.get(posIndex);
 					}
 				}
-				if (negative.contains(stemmed[i])) {
+				if (negIndex > -1) {
 					if (negation) {
-						positiveCount++;
+						positiveCount += negWeights.get(negIndex);
 					} else {
-						negativeCount++;
+						negativeCount += negWeights.get(negIndex);
 					}
 				}
 			}
