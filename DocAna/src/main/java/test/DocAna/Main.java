@@ -1,5 +1,8 @@
 package test.DocAna;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 
 /**
@@ -13,7 +16,7 @@ public class Main {
 
 
 		UnusedCode us = new UnusedCode();
-		us.oldMain();
+		us.newMain();
 
 
 	}

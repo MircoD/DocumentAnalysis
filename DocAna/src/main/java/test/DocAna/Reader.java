@@ -101,9 +101,9 @@ public class Reader {
 
 				scanner.nextLine();
 
-					listOfReviews.add(new Review(prod, user, profil,
-							help_denom, help_enum, score, time, summary, text));
-				
+				listOfReviews.add(new Review(prod, user, profil, help_denom,
+						help_enum, score, time, summary, text));
+
 			}
 
 			scanner.close();
@@ -146,9 +146,20 @@ public class Reader {
 				text = scanner.nextLine();
 				scanner.nextLine();
 
+				if (prod.compareTo("6304341849") == 0
+						|| prod.compareTo("B00005M1Y0") == 0
+						|| prod.compareTo("B00004CUYA") == 0
+						|| prod.compareTo("B00007JXWX") == 0
+						|| prod.compareTo("B00022VM5I") == 0
+						|| prod.compareTo("B004ZJZQFG") == 0
+						|| prod.compareTo("B008G4NDRO") == 0
+						|| prod.compareTo("B004I4KKZO") == 0
+						|| prod.compareTo("B000TXPXC8") == 0
+						|| prod.compareTo("B000XS8RPY") == 0) {
 					listOfReviews.add(new Review(prod, user, profil,
 							help_denom, help_enum, score, time, summary, text));
 
+				}
 
 			}
 
@@ -171,17 +182,15 @@ public class Reader {
 		return str.substring(1, str.length());
 	}
 
-	public String clean(String text){
+	public String clean(String text) {
 		return text.replace("<a href=\"", "").replace("</a>", "")
 				.replace("\">", " ").replace("<br />", "")
 				.replace("<span class=\"tiny\"", "")
-				.replace("<span class=\"tiny", "")
-				.replace("</span>", "").replace("<p>", "")
-				.replace("&lt;", "").replace("/i&gt;", "")
+				.replace("<span class=\"tiny", "").replace("</span>", "")
+				.replace("<p>", "").replace("&lt;", "").replace("/i&gt;", "")
 				.replace("SPOILER>>;", "").replace("shrug>", "")
 				.replace("sigh>>", "").replace("href=\"", "")
-				.replace("&#60", "").replace("&#34", "")
-				.replace("&quot;", "");
+				.replace("&#60", "").replace("&#34", "").replace("&quot;", "");
 	}
-	
+
 }
