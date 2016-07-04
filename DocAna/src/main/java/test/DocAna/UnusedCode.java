@@ -48,7 +48,6 @@ public class UnusedCode {
 		Stemmer stemm = new Stemmer();
 		Logger log = new Logger();
 		tagger.importAndCountCorpus();
-		
 
 		long startTime =0;		
 		String tmp;
@@ -147,8 +146,7 @@ public class UnusedCode {
 		Filter filter = new Filter();
 		POSTagger tag = new POSTagger();
 		AuthorStatistics stats = new AuthorStatistics();
-		tag.importAndCountCorpus();
-
+	
 		long startTime = System.nanoTime();
 		listOfReviews = reader.readReviews("c://listOfReviews.txt");
 		tag.importAndCountCorpus();
@@ -201,9 +199,11 @@ public class UnusedCode {
 		
 		
 		for(int i=0;i<listOfMoviesFilterd.size();i++){
+			
 			for(int j=0;j<listOfMoviesFilterd.get(i).getReviews().size();j++){
-				onestars++;
-				if(listOfMoviesFilterd.get(i).getReviews().get(j).getScore() == 2){
+
+				if(listOfMoviesFilterd.get(i).getReviews().get(j).getScore() == 2 || listOfMoviesFilterd.get(i).getReviews().get(j).getScore() == 1 ){
+					onestars++;
 				String[] tokenz =token.splitTokens(listOfMoviesFilterd.get(i).getReviews().get(j).getText());
 				String[] pos = tag.assignPosToWords(tokenz);
 				String[] stemma = stemm.stem(tokenz, pos);
@@ -225,7 +225,7 @@ public class UnusedCode {
 				}
 				}
 				
-				if(listOfMoviesFilterd.get(i).getReviews().get(j).getScore() == 4){
+				if(listOfMoviesFilterd.get(i).getReviews().get(j).getScore() == 4 || listOfMoviesFilterd.get(i).getReviews().get(j).getScore() == 5 ){
 					fivestars++;
 				String[] tokenz =token.splitTokens(listOfMoviesFilterd.get(i).getReviews().get(j).getText());
 				String[] pos = tag.assignPosToWords(tokenz);
@@ -250,21 +250,18 @@ public class UnusedCode {
 				
 			}
 			System.out.println("mov: "
-					+ ((System.nanoTime() - startTime) / 1000000000.0) + " "
-					+ listOfMoviesFilterd.size());
+					+ ((System.nanoTime() - startTime) / 1000000000.0) + " " + i);
 			startTime = System.nanoTime();
 			
 		}
 		
 		
-		Iterator itr = fivestar.keySet().iterator();
-		while(itr.hasNext()){
-			String key = itr.next().toString();
-			double one = (double)onestar.get(key) / (double)onestars;
-			double five = (double)fivestar.get(key) / (double)fivestars;
+		for(String tmpk : fivestar.keySet()){
+			double one = (double)onestar.get(tmpk) / (double)onestars;
+			double five = (double)fivestar.get(tmpk) / (double)fivestars;
 			double fo = five - one;
 			
-			log.log(key + " " + five + " " + one + " " + fo, "wordlist");
+			log.log(tmpk + " " + five + " " + one + " " + fo + " " + five/one + " " + one/five, "wordlist");
 		}
 
 		

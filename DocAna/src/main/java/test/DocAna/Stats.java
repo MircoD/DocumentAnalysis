@@ -8,7 +8,7 @@ public class Stats {
 	double avgWordLength;
 	double avgWordsPerReview;
 	double avgfunctionWords;
-
+	
 	public Stats(double avgSentenceLength, double avgCapitalLetter,
 			double avgWordLength, double avgWordsPerReview,
 			double avgfunctionWords) {

@@ -93,7 +93,7 @@ public class Stemmer {
 				}
 
 				// Suffix -ness; noun from adjective/adverb
-				if (tokens[i].matches("[A-Za-z\\-]+ness")) {
+				else if (tokens[i].matches("[A-Za-z\\-]+ness")) {
 					String tmp = tokens[i].replaceAll("ness(?=\\s+|$)", "");
 					String tmpe = tmp + "e";
 
@@ -112,7 +112,7 @@ public class Stemmer {
 				}
 
 				// Suffix -man/-men;
-				if (tokens[i].endsWith("men")) {
+				else if (tokens[i].endsWith("men")) {
 					if (tokens[i].length() != 3) {
 						stemmd[i] = tokens[i].substring(0,
 								tokens[i].length() - 3) + "man";
@@ -122,7 +122,7 @@ public class Stemmer {
 				}
 
 				// Suffix -er ; comparative, noun from verb(e.g. keeper-> keep)
-				if (tokens[i].matches("[A-Za-z\\-]+er")
+				else if (tokens[i].matches("[A-Za-z\\-]+er")
 						&& (pos[i].compareTo("jjr") == 0
 						|| pos[i].compareTo("rbr") == 0
 						|| pos[i].compareTo("nn") == 0 
@@ -152,9 +152,21 @@ public class Stemmer {
 						stemmd[i]=tmp;
 					}
 				}
+				// Suffix -ly; adverb from adjective, adverb from noun
+				else if (tokens[i].matches("[A-Za-z\\-]+ly") && pos[i].compareTo("rb") == 0) {
+					String tmp = tokens[i].replaceAll("ly(?=\\s+|$)", "");
+
+					// cases like happily -> happy
+					if (tmp.matches("[A-Za-z\\-]+i")) {
+						tmp = tmp.replaceAll("i(?=\\s+|$)", "y");
+					}
+					
+					stemmd[i]=tmp;
+				}
+
 
 				// Suffix -y; adverb from adjective/noun
-				if (tokens[i].matches("[A-Za-z\\-]+y") && pos[i].compareTo("rb") == 0) {
+				else if (tokens[i].matches("[A-Za-z\\-]+y") && pos[i].compareTo("rb") == 0) {
 					String tmp = tokens[i].replaceAll("y(?=\\s+|$)", "");
 
 					// check if the last two chars are the same(e.g. foggy)
@@ -166,24 +178,12 @@ public class Stemmer {
 					stemmd[i]=tmp;
 				}
 
-				// Suffix -ly; adverb from adjective, adverb from noun
-				if (tokens[i].matches("[A-Za-z\\-]+ly") && pos[i].compareTo("rb") == 0) {
-					String tmp = tokens[i].replaceAll("ly(?=\\s+|$)", "");
-
-					// cases like happily -> happy
-					if (tmp.matches("[A-Za-z\\-]+i")) {
-						tmp = tmp.replaceAll("i(?=\\s+|$)", "y");
-					}
-					
-					stemmd[i]=tmp;
-				}
-
+			
 				// Suffix -ed; past tense, adjective from noun
-				if (tokens[i].endsWith("ed") 
+				else if (tokens[i].endsWith("ed") 
 						&& (pos[i].compareTo("vbd") == 0 
 						|| pos[i].compareTo("vbn") == 0 
 						|| pos[i].compareTo("jj") == 0)) {
-					
 					String tmp = tokens[i].substring(0, tokens[i].length() - 2);
 					String tmpe = tmp + "e";
 					if (tmp.matches("[A-Za-z\\-]+i")) {
@@ -198,8 +198,10 @@ public class Stemmer {
 					}
 				}
 
+				
+				
 				// Suffix -en; past tense, verb from adjective
-				if (tokens[i].endsWith("en") && tokens[i].length() > 3) {
+				else if (tokens[i].endsWith("en") && tokens[i].length() > 3) {
 					String tmp = tokens[i].substring(0, tokens[i].length() - 2);
 					String tmpe = tmp + "e";
 
@@ -220,7 +222,7 @@ public class Stemmer {
 				}
 
 				// Suffix -ing; gerund, present particle
-				if (tokens[i].endsWith("ing") 
+				else if (tokens[i].endsWith("ing") 
 						&& tokens[i].length() > 4 
 						&& pos[i].compareTo("vbg") == 0) {
 					String tmp = tokens[i].substring(0, tokens[i].length() - 3);
@@ -244,7 +246,7 @@ public class Stemmer {
 				}
 
 				// Suffix -est; superlativ
-				if (tokens[i].endsWith("est")
+				else if (tokens[i].endsWith("est")
 						&& tokens[i].length() > 4 
 						&& (pos[i].compareTo("rbt") == 0 
 						||pos[i].compareTo("jjt") == 0)) {
@@ -256,12 +258,15 @@ public class Stemmer {
 						tmp = tmp.substring(0, tmp.length() - 1);
 					}
 					stemmd[i]=tmp;	
+				} else{
+					stemmd[i]=tokens[i];
 				}
+			
 				
 
 			}
 		}
-		return tokens;
+		return stemmd;
 	}
 
 	/*

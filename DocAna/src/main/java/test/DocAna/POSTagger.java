@@ -93,7 +93,6 @@ public class POSTagger {
 								// checks if the word already appeared.
 								//if not it gets added to the map.
 								if (mapOfAllWords.containsKey(word)) {
-									
 									//checks if the tag for the word is in the word/tag map
 									//if not in the map it gets added to it
 									if(mapOfAllWords.get(word).containsKey(tag)){
@@ -152,6 +151,9 @@ public class POSTagger {
 					scanner.close();
 				}
 			}
+			
+			
+			
 			
 			System.out.println("corpus successfully read");
 		} catch (IOException e) {
