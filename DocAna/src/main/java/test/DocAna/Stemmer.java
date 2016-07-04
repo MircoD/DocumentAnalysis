@@ -165,6 +165,7 @@ public class Stemmer {
 				}
 
 
+				
 				// Suffix -y; adverb from adjective/noun
 				else if (tokens[i].matches("[A-Za-z\\-]+y") && pos[i].compareTo("rb") == 0) {
 					String tmp = tokens[i].replaceAll("y(?=\\s+|$)", "");
