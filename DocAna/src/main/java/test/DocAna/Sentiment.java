@@ -1,32 +1,39 @@
 package test.DocAna;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Sentiment {
 
-	private List<String> positive;
-	private List<String> negative;
-	private List<Double> posWeights;
-	private List<Double> negWeights;
+	private HashMap<String, Double> positiveWords;
+	private HashMap<String, Double> negativeWords;
 	private double butWeight;
 	private double positiveCount = 0;
 	private double negativeCount = 0;
-
-	public Sentiment(List<String> positive, List<String> negative) {
-		this.positive = positive;
-		this.negative = negative;
-	}
 	
-	public Sentiment(List<String> positive, List<String> negative,
-			List<Double> posWeights, List<Double> negWeights, double butWeight) {
-		this.positive = positive;
-		this.negative = negative;
-		this.posWeights = posWeights;
-		this.negWeights = negWeights;
+	public Sentiment(HashMap<String, Double> positiveWords,
+			HashMap<String, Double> negativeWords) {
+		this.positiveWords = positiveWords;
+		this.negativeWords = negativeWords;
+		this.butWeight = 1.0;
+	}
+
+	public Sentiment(HashMap<String, Double> positiveWords,
+			HashMap<String, Double> negativeWords, double butWeight) {
+		this.positiveWords = positiveWords;
+		this.negativeWords = negativeWords;
 		this.butWeight = butWeight;
 	}
-	
+
+	/**
+	 * Returns sentiment of movies, aggregating all reviews for one movie, hence long reviews might have more influence.
+	 * Simply counts the words if improved=false, otherwise considers weights and negations.
+	 * 
+	 * @param movies - List of movies to be analyzed
+	 * @param improved - which version to use
+	 * @return Sentiment of the movies
+	 */
 	public List<Boolean> getMoviesSentiment(List<Movies> movies, boolean improved) {
 		
 		List<Boolean> result = new ArrayList<Boolean>();
@@ -42,6 +49,47 @@ public class Sentiment {
 		return result;
 	}
 	
+	/**
+	 * Returns sentiment of movies, by determining the sentiment of the single reviews before.
+	 * Simply counts the words if improved=false, otherwise considers weights and negations.
+	 * 
+	 * @param movies - List of movies to be analyzed
+	 * @param improved - which version to use
+	 * @return Sentiment of the movies
+	 */
+	public List<Boolean> getMoviesSentiment2(List<Movies> movies, boolean improved) {
+		ArrayList<Boolean> result = new ArrayList<Boolean>();
+		ArrayList<ArrayList<Boolean>> intermediate = getReviewsSentiment(movies, improved);
+		
+		for (ArrayList<Boolean> reviewList : intermediate) {
+			int positiveCount = 0;
+			int negativeCount = 0;
+			for (Boolean sentiment : reviewList) {
+				if (sentiment) {
+					positiveCount++;
+				} else {
+					negativeCount++;
+				}
+			}
+			if (positiveCount > negativeCount) {
+				result.add(true);
+			} else {
+				result.add(false);
+			}
+			
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Returns sentiment of the single reviews of each movie.
+	 * Simply counts the words if improved=false, otherwise considers weights and negations.
+	 * 
+	 * @param movies - List of movies to be analyzed
+	 * @param improved - which version to use
+	 * @return Sentiment of the movies
+	 */
 	public ArrayList<ArrayList<Boolean>> getReviewsSentiment(List<Movies> movies, boolean improved) {
 		
 		ArrayList<ArrayList<Boolean>> result = new ArrayList<ArrayList<Boolean>>();
@@ -63,8 +111,6 @@ public class Sentiment {
 	
 	private boolean getReviewSentiment(Review review) {
 		Tokenizer token = new Tokenizer();
-		Stemmer stem = new Stemmer();
-		
 		String[] tokens = token.splitTokens(review.getText());
 		//String[] pos = tagger.assignPosToWords(tokens);
 		//String[] stemmed = stem.stem(tokens, pos);
@@ -81,13 +127,10 @@ public class Sentiment {
 			negativeCount = 0;
 			return false;
 		}
-		
-		
 	}
 	
 	private boolean getMovieSentiment(Movies movie) {
 		Tokenizer token = new Tokenizer();
-		Stemmer stem = new Stemmer();
 		
 		for (Review review : movie.getReviews()) {
 			String[] tokens = token.splitTokens(review.getText());
@@ -111,8 +154,6 @@ public class Sentiment {
 	
 	private boolean getReviewSentimentImproved(Review review) {
 		Tokenizer token = new Tokenizer();
-		Stemmer stem = new Stemmer();
-		
 		String[] tokens = token.splitTokens(review.getText());
 		//String[] pos = tagger.assignPosToWords(tokens);
 		//String[] stemmed = stem.stem(tokens, pos);
@@ -133,7 +174,6 @@ public class Sentiment {
 
 	private boolean getMovieSentimentImproved(Movies movie) {
 		Tokenizer token = new Tokenizer();
-		Stemmer stem = new Stemmer();
 		
 		for (Review review : movie.getReviews()) {
 			String[] tokens = token.splitTokens(review.getText());
@@ -181,67 +221,49 @@ public class Sentiment {
 		return false;
 	}
 		
-	private void adjustWeights(String word) {
-		if (positive.contains(word)) {
+	private void adjustWeights(String word) {		
+		if (positiveWords.containsKey(word)) {
 			positiveCount++;
 		}
-		if (negative.contains(word)) {
+		if (negativeWords.containsKey(word)) {
 			negativeCount++;
 		}
 	}
 	
 	private void adjustWeightsImproved(String[] stemmed, String word, int index) {
-		int posIndex = positive.indexOf(word);
-		int negIndex = negative.indexOf(word);
 		boolean negation = isNegated(stemmed, index);
 		//boolean but = hasBut(stemmed, i);
 		
-		if (posIndex > -1) {
+		if (positiveWords.containsKey(word)) {
 			if (negation) {
-				negativeCount += posWeights.get(posIndex);
+				negativeCount += positiveWords.get(word);
 			} else {
-				positiveCount += posWeights.get(posIndex);
+				positiveCount += positiveWords.get(word);
 			}
 		}
-		if (negIndex > -1) {
+		if (negativeWords.containsKey(word)) {
 			if (negation) {
-				positiveCount += negWeights.get(negIndex);
+				positiveCount += negativeWords.get(word);
 			} else {
-				negativeCount += negWeights.get(negIndex);
+				negativeCount += negativeWords.get(word);
 			}
 		}
 	}
 
-	public List<String> getPositive() {
-		return positive;
+	public HashMap<String, Double> getPositiveWords() {
+		return positiveWords;
 	}
 
-	public void setPositive(List<String> positive) {
-		this.positive = positive;
+	public void setPositiveWords(HashMap<String, Double> positiveWords) {
+		this.positiveWords = positiveWords;
 	}
 
-	public List<String> getNegative() {
-		return negative;
+	public HashMap<String, Double> getNegativeWords() {
+		return negativeWords;
 	}
 
-	public void setNegative(List<String> negative) {
-		this.negative = negative;
-	}
-
-	public List<Double> getPosWeights() {
-		return posWeights;
-	}
-
-	public void setPosWeights(List<Double> posWeights) {
-		this.posWeights = posWeights;
-	}
-
-	public List<Double> getNegWeights() {
-		return negWeights;
-	}
-
-	public void setNegWeights(List<Double> negWeights) {
-		this.negWeights = negWeights;
+	public void setNegativeWords(HashMap<String, Double> negativeWords) {
+		this.negativeWords = negativeWords;
 	}
 
 	public double getButWeight() {
@@ -250,21 +272,5 @@ public class Sentiment {
 
 	public void setButWeight(double butWeight) {
 		this.butWeight = butWeight;
-	}
-
-	public double getPositiveCount() {
-		return positiveCount;
-	}
-
-	public void setPositiveCount(double positiveCount) {
-		this.positiveCount = positiveCount;
-	}
-
-	public double getNegativeCount() {
-		return negativeCount;
-	}
-
-	public void setNegativeCount(double negativeCount) {
-		this.negativeCount = negativeCount;
 	}
 }

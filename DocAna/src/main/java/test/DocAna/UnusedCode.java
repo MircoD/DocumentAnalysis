@@ -333,24 +333,18 @@ public class UnusedCode {
 				+ listOfMoviesFilterd.size());
 		startTime = System.nanoTime();
 		
-		List<String> positive = new ArrayList<String>();
-		List<Double> posWeight = new ArrayList<Double>();
-		List<String> negative = new ArrayList<String>();
-		List<Double> negWeight = new ArrayList<Double>();
-
-		positive.add("excellent");
-		posWeight.add(1.0);
-		negative.add("bad");
-		negWeight.add(1.0);
+		HashMap<String, Double> positive = new HashMap<String, Double>();
+		HashMap<String, Double> negative = new HashMap<String, Double>();
+		positive.put("good", 0.75);
+		positive.put("excellent", 2.0);
+		negative.put("bad", 1.0);
 		
-		Sentiment sent = new Sentiment(positive, negative, posWeight, negWeight, 1.0);
+		Sentiment sent = new Sentiment(positive, negative);
 		
-		List<Boolean> res1 = sent.getMoviesSentiment(listOfMoviesFilterd, false);
 		List<Boolean> res1Improved = sent.getMoviesSentiment(listOfMoviesFilterd, true);
-		List<ArrayList<Boolean>> res2 = sent.getReviewsSentiment(listOfMoviesFilterd, false);
-		List<ArrayList<Boolean>> res2Improved = sent.getReviewsSentiment(listOfMoviesFilterd, true);
-		System.out.println(res1.toString());
-		
+		List<Boolean> res2Improved = sent.getMoviesSentiment2(listOfMoviesFilterd, true);
+		System.out.println(res1Improved.toString());
+		System.out.println(res2Improved.toString());
 		
 	}
 	
