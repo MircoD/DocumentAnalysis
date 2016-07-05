@@ -265,6 +265,8 @@ public class Stemmer {
 			
 				
 
+			} else{
+				stemmd[i]=tokens[i];
 			}
 		}
 		return stemmd;

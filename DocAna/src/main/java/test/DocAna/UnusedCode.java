@@ -185,14 +185,13 @@ public class UnusedCode {
 
 		System.out.println(listOfMoviesFull.size());
 
-		listOfMoviesFilterd = filter.moviesWithMinReviews(listOfMoviesFull, 50,
+		listOfMoviesFilterd = filter.moviesWithMinReviews(listOfMoviesFull, 0,
 				900);
-		HashMap<String,Integer> wordlist = new HashMap<String, Integer>();
 		HashMap<String,Integer> fivestar = new HashMap<String, Integer>();
 		HashMap<String,Integer> onestar = new HashMap<String, Integer>();
 		int fivestars=0;
 		int onestars=0;
-		
+		int amountallwords=0;
 		System.out.println("author/movie list:"
 				+ ((System.nanoTime() - startTime) / 1000000000.0) + " "
 				+ listOfMoviesFilterd.size());
@@ -203,11 +202,15 @@ public class UnusedCode {
 			
 			for(int j=0;j<listOfMoviesFilterd.get(i).getReviews().size();j++){
 
+				String[] stemma =token.splitTokens(listOfMoviesFilterd.get(i).getReviews().get(j).getText());
+				amountallwords = amountallwords +stemma.length;
+				//String[] pos = tag.assignPosToWords(tokenz);
+				//String[] stemma = stemm.stem(tokenz, pos);
 				if(listOfMoviesFilterd.get(i).getReviews().get(j).getScore() == 2 || listOfMoviesFilterd.get(i).getReviews().get(j).getScore() == 1 ){
 					onestars++;
-				String[] tokenz =token.splitTokens(listOfMoviesFilterd.get(i).getReviews().get(j).getText());
-				String[] pos = tag.assignPosToWords(tokenz);
-				String[] stemma = stemm.stem(tokenz, pos);
+				
+				//String[] pos = tag.assignPosToWords(tokenz);
+				//String[] stemma = stemm.stem(tokenz, pos);
 				
 				for(int k=0;k<stemma.length;k++){
 					if(onestar.containsKey(stemma[k])){
@@ -228,9 +231,8 @@ public class UnusedCode {
 				
 				if(listOfMoviesFilterd.get(i).getReviews().get(j).getScore() == 4 || listOfMoviesFilterd.get(i).getReviews().get(j).getScore() == 5 ){
 					fivestars++;
-				String[] tokenz =token.splitTokens(listOfMoviesFilterd.get(i).getReviews().get(j).getText());
-				String[] pos = tag.assignPosToWords(tokenz);
-				String[] stemma = stemm.stem(tokenz, pos);
+				
+				
 				
 				for(int k=0;k<stemma.length;k++){
 					if(fivestar.containsKey(stemma[k])){
@@ -258,13 +260,13 @@ public class UnusedCode {
 		
 		
 		for(String tmpk : fivestar.keySet()){
-			double one = (double)onestar.get(tmpk) / (double)onestars;
-			double five = (double)fivestar.get(tmpk) / (double)fivestars;
+			double one = (double)onestar.get(tmpk) /  (double)amountallwords;
+			double five = (double)fivestar.get(tmpk) / (double)amountallwords;
 			double fo = five - one;
 			
 			log.log(tmpk + " " + five + " " + one + " " + fo + " " + five/one + " " + one/five, "wordlist");
 		}
-
+		System.out.println(fivestars + " " + onestars);
 		
 		
 	}
@@ -325,7 +327,7 @@ public class UnusedCode {
 
 		System.out.println(listOfMoviesFull.size());
 
-		listOfMoviesFilterd = filter.moviesWithMinReviews(listOfMoviesFull, 50,
+		listOfMoviesFilterd = filter.moviesWithMinReviews(listOfMoviesFull, 20,
 				900);
 
 		System.out.println("author/movie list:"
@@ -335,17 +337,57 @@ public class UnusedCode {
 		
 		HashMap<String, Double> positive = new HashMap<String, Double>();
 		HashMap<String, Double> negative = new HashMap<String, Double>();
-		positive.put("good", 0.75);
-		positive.put("excellent", 2.0);
+		positive.put("wonderful", 1.0);
+		positive.put("excellent", 1.0);
+		positive.put("perfect", 1.0);
+		positive.put("favorite", 1.0);
+		positive.put("classic", 1.0);
+		positive.put("loved", 1.0);
+		positive.put("great", 1.0);
+		positive.put("best", 1.0);
+		positive.put("fun", 1.0);
+		positive.put("love", 1.0);
+
+		negative.put("waste", 1.0);
+		negative.put("worst", 1.0);
+		negative.put("terrible", 1.0);
+		negative.put("boring", 1.0);
+		negative.put("poor", 1.0);
+		negative.put("money", 1.0);
 		negative.put("bad", 1.0);
+		negative.put("instead", 1.0);
+		negative.put("minutes", 1.0);
+		negative.put("nothing", 1.0);
+		
+		
 		
 		Sentiment sent = new Sentiment(positive, negative);
 		
 		List<Boolean> res1Improved = sent.getMoviesSentiment(listOfMoviesFilterd, true);
 		List<Boolean> res2Improved = sent.getMoviesSentiment2(listOfMoviesFilterd, true);
-		System.out.println(res1Improved.toString());
-		System.out.println(res2Improved.toString());
 		
+		ArrayList<Double> avgRating = new ArrayList<Double>();
+		for(Movies tmpm : listOfMoviesFilterd){
+			
+			Double rating = 0.0;
+			double reviewsNo = tmpm.getReviews().size();
+			for(Review tmpr : tmpm.getReviews()){
+				rating = rating + tmpr.getScore();
+			}
+			
+			avgRating.add(rating/reviewsNo);
+		}
+		log.log("avgRating sent sentImproved", "movieclass");
+		for(int i=0;i<listOfMoviesFilterd.size();i++){
+			Double rating = 0.0;
+			double reviewsNo = listOfMoviesFilterd.get(i).getReviews().size();
+			for(Review tmpr : listOfMoviesFilterd.get(i).getReviews()){
+				rating = rating + tmpr.getScore();
+			}
+			
+			avgRating.add(rating/reviewsNo);
+			log.log(listOfMoviesFilterd.get(i).getMovieID() + " " + avgRating.get(i) + " " + res1Improved.get(i) + " " + res2Improved.get(i), "movieclass");
+		}
 	}
 	
 }
