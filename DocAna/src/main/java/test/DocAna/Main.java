@@ -16,7 +16,7 @@ public class Main {
 
 
 		UnusedCode us = new UnusedCode();
-		us.newMain();
+		us.newnewMain();
 
 
 	}

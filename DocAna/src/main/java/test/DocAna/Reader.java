@@ -148,9 +148,20 @@ public class Reader {
 
 		
 			
+				if (prod.compareTo("6304341849") == 0
+						|| prod.compareTo("B00005M1Y0") == 0
+						|| prod.compareTo("B00004CUYA") == 0
+						|| prod.compareTo("B00007JXWX") == 0
+						|| prod.compareTo("B00022VM5I") == 0
+						|| prod.compareTo("B004ZJZQFG") == 0
+						|| prod.compareTo("B008G4NDRO") == 0
+						|| prod.compareTo("B004I4KKZO") == 0
+						|| prod.compareTo("B000TXPXC8") == 0
+						|| prod.compareTo("B000XS8RPY") == 0) {
 					listOfReviews.add(new Review(prod, user, profil,
 							help_denom, help_enum, score, time, summary, text));
 
+				}
 
 			}
 

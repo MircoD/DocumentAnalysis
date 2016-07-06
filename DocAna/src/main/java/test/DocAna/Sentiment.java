@@ -152,7 +152,7 @@ public class Sentiment {
 		}
 	}
 	
-	private boolean getReviewSentimentImproved(Review review) {
+	public boolean getReviewSentimentImproved(Review review) {
 		Tokenizer token = new Tokenizer();
 		String[] tokens = token.splitTokens(review.getText());
 		//String[] pos = tagger.assignPosToWords(tokens);

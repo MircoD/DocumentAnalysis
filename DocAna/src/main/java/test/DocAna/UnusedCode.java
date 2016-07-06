@@ -327,7 +327,7 @@ public class UnusedCode {
 
 		System.out.println(listOfMoviesFull.size());
 
-		listOfMoviesFilterd = filter.moviesWithMinReviews(listOfMoviesFull, 20,
+		listOfMoviesFilterd = filter.moviesWithMinReviews(listOfMoviesFull, 10,
 				900);
 
 		System.out.println("author/movie list:"
@@ -364,7 +364,9 @@ public class UnusedCode {
 		Sentiment sent = new Sentiment(positive, negative);
 		
 		List<Boolean> res1Improved = sent.getMoviesSentiment(listOfMoviesFilterd, true);
+		List<Boolean> res1 = sent.getMoviesSentiment(listOfMoviesFilterd, false);
 		List<Boolean> res2Improved = sent.getMoviesSentiment2(listOfMoviesFilterd, true);
+		
 		
 		ArrayList<Double> avgRating = new ArrayList<Double>();
 		for(Movies tmpm : listOfMoviesFilterd){
@@ -377,7 +379,7 @@ public class UnusedCode {
 			
 			avgRating.add(rating/reviewsNo);
 		}
-		log.log("avgRating sent sentImproved", "movieclass");
+		log.log("avgRating MovieSent MovieSentImproved SentByReviewImproved", "movieclass");
 		for(int i=0;i<listOfMoviesFilterd.size();i++){
 			Double rating = 0.0;
 			double reviewsNo = listOfMoviesFilterd.get(i).getReviews().size();
@@ -386,8 +388,84 @@ public class UnusedCode {
 			}
 			
 			avgRating.add(rating/reviewsNo);
-			log.log(listOfMoviesFilterd.get(i).getMovieID() + " " + avgRating.get(i) + " " + res1Improved.get(i) + " " + res2Improved.get(i), "movieclass");
+			log.log(listOfMoviesFilterd.get(i).getMovieID() + " " + avgRating.get(i) + " " + res1.get(i) + " " + res1Improved.get(i) + " " + res2Improved.get(i), "movieclass10");
 		}
 	}
 	
+	public void newnewMain(){
+		ArrayList<Review> listOfReviews = new ArrayList<Review>();
+		HashMap<String, Movies> listOfMoviesFull = new HashMap<String, Movies>();
+		ArrayList<Movies> listOfMoviesFilterd = new ArrayList<Movies>();
+		HashMap<String, Authors> listOfAuthors = new HashMap<String, Authors>();
+		ArrayList<Authors> listOfAuthorsFilterd = new ArrayList<Authors>();
+
+		ArrayList<ArrayList<Integer>> frequencyCountMatrix;
+		ArrayList<ArrayList<Double>> frequencyCountMatrixNormalized;
+		ArrayList<ArrayList<Double>> similarityMatrix = new ArrayList<ArrayList<Double>>();
+
+		Tokenizer token = new Tokenizer();
+		Reader reader = new Reader();
+		Similarity similarity = new Similarity();
+		Logger log = new Logger();
+		Stemmer stemm = new Stemmer();
+		Filter filter = new Filter();
+		POSTagger tag = new POSTagger();
+		AuthorStatistics stats = new AuthorStatistics();
+	
+		long startTime = System.nanoTime();
+		listOfReviews = reader.readReviews("c://listOfReviews.txt");
+		tag.importAndCountCorpus();
+
+		String tmp;
+		tmp = String.valueOf(((System.nanoTime() - startTime) / 1000000000.0));
+		System.out.println("reading file:" + tmp);
+
+		startTime = System.nanoTime();
+		// adds the reviews to the listOfMovies and listOfAuthors
+
+
+		System.out.println(listOfMoviesFull.size());
+
+		listOfMoviesFilterd = filter.moviesWithMinReviews(listOfMoviesFull, 10,
+				900);
+		
+
+		System.out.println("author/movie list:"
+				+ ((System.nanoTime() - startTime) / 1000000000.0) + " "
+				+ listOfMoviesFilterd.size());
+		startTime = System.nanoTime();
+		
+		HashMap<String, Double> positive = new HashMap<String, Double>();
+		HashMap<String, Double> negative = new HashMap<String, Double>();
+		positive.put("wonderful", 1.0);
+		positive.put("excellent", 1.0);
+		positive.put("perfect", 1.0);
+		positive.put("favorite", 1.0);
+		positive.put("classic", 1.0);
+		positive.put("loved", 1.0);
+		positive.put("great", 1.0);
+		positive.put("best", 1.0);
+		positive.put("fun", 1.0);
+		positive.put("love", 1.0);
+
+		negative.put("waste", 1.0);
+		negative.put("worst", 1.0);
+		negative.put("terrible", 1.0);
+		negative.put("boring", 1.0);
+		negative.put("poor", 1.0);
+		negative.put("money", 1.0);
+		negative.put("bad", 1.0);
+		negative.put("instead", 1.0);
+		negative.put("minutes", 1.0);
+		negative.put("nothing", 1.0);
+		
+				
+		Sentiment sent = new Sentiment(positive, negative);
+		log.log("rating class", "reviewsClass");
+		for (Review tempr : listOfReviews) {
+			log.log(tempr.getScore() + " " + sent.getReviewSentimentImproved(tempr), "reviewsClass");
+			
+		}
+
+	}	
 }
